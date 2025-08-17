@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Leaf, Eye, EyeOff, ArrowRight, Sparkles, Sprout, Sun, Droplets, Wind } from "lucide-react"
+import { supabase } from "@/lib/supabaseClient"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -26,12 +27,22 @@ export default function LoginPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    // Supabase Auth sign in
+    const { error } = await supabase.auth.signInWithPassword({
+      email: formData.email,
+      password: formData.password,
+    })
 
-    // Redirect to dashboard (placeholder)
-    console.log("Login attempt:", formData)
     setIsLoading(false)
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    // Redirect to dashboard or show success
+    // Example: router.push("/dashboard")
+    alert("Login successful!")
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {

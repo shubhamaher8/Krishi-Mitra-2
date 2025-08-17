@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Leaf, Eye, EyeOff, ArrowRight, CheckCircle, Sprout, Sun, Droplets, Wind } from "lucide-react"
+import { supabase } from "@/lib/supabaseClient"
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -29,7 +30,6 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
-    subscribeNewsletter: true,
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,11 +47,26 @@ export default function RegisterPage() {
 
     setIsLoading(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    // Supabase Auth sign up
+    const { error } = await supabase.auth.signUp({
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          firstName: formData.firstName,
+          phone: formData.phone,
+        },
+      },
+    })
 
-    console.log("Registration attempt:", formData)
     setIsLoading(false)
+
+    if (error) {
+      alert(error.message)
+      return
+    }
+
+    alert("Registration successful! Please check your email to verify your account.")
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
