@@ -14,8 +14,10 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Leaf, Eye, EyeOff, ArrowRight, CheckCircle, Sprout, Sun, Droplets, Wind } from "lucide-react"
 import { supabase } from "@/lib/supabaseClient"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
+  const router = useRouter() // Add this line
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -48,7 +50,7 @@ export default function RegisterPage() {
     setIsLoading(true)
 
     // Supabase Auth sign up
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: formData.email,
       password: formData.password,
       options: {
@@ -61,12 +63,38 @@ export default function RegisterPage() {
 
     setIsLoading(false)
 
+    // If registration is successful, insert profile data into users table
+    if (!error && data?.user?.id) {
+      await insertUserProfile(data.user.id)
+    }
+
     if (error) {
       alert(error.message)
       return
     }
 
-    alert("Registration successful! Please check your email to verify your account.")
+    // Redirect to dashboard after successful registration
+    router.push("/dashboard")
+  }
+
+  // Helper to insert user profile data into users table
+  async function insertUserProfile(userId: string) {
+    const { error } = await supabase.from("users").insert([
+      {
+        id: userId,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        farm_size: formData.farmSize,
+        location: formData.location,
+        primary_crop: formData.primaryCrop,
+      },
+    ])
+    if (error) {
+      // Optionally handle error (e.g., show notification)
+      console.error("Error saving user profile:", error.message)
+    }
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {

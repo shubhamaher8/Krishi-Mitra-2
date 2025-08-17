@@ -13,8 +13,10 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { Leaf, Eye, EyeOff, ArrowRight, Sparkles, Sprout, Sun, Droplets, Wind } from "lucide-react"
 import { supabase } from "@/lib/supabaseClient"
+import { useRouter } from "next/navigation"
 
 export default function LoginPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -40,9 +42,8 @@ export default function LoginPage() {
       return
     }
 
-    // Redirect to dashboard or show success
-    // Example: router.push("/dashboard")
-    alert("Login successful!")
+    // Redirect to dashboard
+    router.push("/dashboard")
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
