@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { supabase } from "@/lib/supabaseClient"
 import {
   Brain,
   TrendingUp,
@@ -36,7 +37,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-function AuthProtectedDashboard() {
+function AuthProtectedDashboard({ user }: { user: any }) {
   const [selectedLocation, setSelectedLocation] = useState("")
   const [selectedCrop, setSelectedCrop] = useState("")
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
@@ -95,7 +96,7 @@ function AuthProtectedDashboard() {
               <h1 className="text-3xl font-bold">
                 Welcome back,{" "}
                 <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
-                  John!
+                  {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Farmer'}!
                 </span>
               </h1>
               <p className="text-muted-foreground">Here's what's happening with your farm today.</p>
@@ -698,17 +699,25 @@ function LoginPrompt() {
 
 export default function DashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+  const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    // For demo purposes, we'll simulate checking authentication
-    const checkAuth = () => {
-      // Simulate checking if user is logged in
-      // In a real app, this would check localStorage, cookies, or auth provider
-      const isLoggedIn = localStorage.getItem("isLoggedIn") === "true"
-      setIsAuthenticated(isLoggedIn)
+    // Check current auth state
+    const checkAuth = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      setIsAuthenticated(!!user)
     }
 
     checkAuth()
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null)
+      setIsAuthenticated(!!session?.user)
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   // Show loading state while checking authentication
@@ -768,16 +777,16 @@ export default function DashboardPage() {
             <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-green-400/3 rounded-full blur-2xl animate-float"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-r from-green-500/3 to-green-400/3 rounded-full blur-3xl animate-spin-slow"></div>
           </div>
-
-          <Header />
-          <main className="flex-1 bg-muted/30 pt-20 flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
-              <p className="text-muted-foreground">Loading dashboard...</p>
-            </div>
-          </main>
-          <Footer />
         </div>
+
+        <Header />
+        <main className="flex-1 bg-muted/30 pt-20 flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading dashboard...</p>
+          </div>
+        </main>
+        <Footer />
       </div>
     )
   }
@@ -841,7 +850,7 @@ export default function DashboardPage() {
 
       <Header />
 
-      {isAuthenticated ? <AuthProtectedDashboard /> : <LoginPrompt />}
+      {isAuthenticated ? <AuthProtectedDashboard user={user} /> : <LoginPrompt />}
 
       <Footer />
     </div>
