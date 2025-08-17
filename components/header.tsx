@@ -115,22 +115,22 @@ export function Header() {
           </SheetTrigger>
           <SheetContent
             side="right"
-            className="w-[280px] sm:w-[320px] px-4 bg-white/95 backdrop-blur-xl border-l border-white/20 shadow-2xl"
+            className="w-[90vw] max-w-xs border-b border-white/10 bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-white/65 shadow-lg rounded-3xl"
           >
-            <div className="flex flex-col space-y-6 mt-8">
-              <div className="flex flex-col space-y-4">
+            <div className="flex flex-col space-y-6 mt-16">
+              <div className="flex flex-col space-y-3 px-4">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-lg font-medium transition-all duration-300 hover:text-accent py-3 px-4 rounded-xl hover:bg-gradient-to-r hover:from-accent/10 hover:to-accent-blue/10 hover:shadow-md hover:scale-105 -mx-3 backdrop-blur-sm"
+                    className="text-base font-medium transition-all duration-300 hover:text-accent py-2 px-4 rounded-lg hover:bg-gradient-to-r hover:from-accent/10 hover:to-accent-blue/10 hover:shadow-md hover:scale-105 backdrop-blur-sm border border-transparent hover:border-accent/20"
                     onClick={() => setIsOpen(false)}
                   >
                     {item.name}
                   </Link>
                 ))}
               </div>
-              <div className="flex flex-col space-y-3 pt-6 border-t border-white/20">
+              <div className="flex flex-col space-y-3 px-4 border-t border-white/20">
                 {!isLoggedIn ? (
                   <>
                     <Button
