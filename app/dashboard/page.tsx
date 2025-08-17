@@ -91,7 +91,7 @@ function AuthProtectedDashboard({ user }: { user: any }) {
       <div className="container px-4 py-8">
         {/* Welcome Section */}
         <div className="mb-8 animate-fade-in-up">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-2">
             <div>
               <h1 className="text-3xl font-bold">
                 Welcome back,{" "}
@@ -101,11 +101,9 @@ function AuthProtectedDashboard({ user }: { user: any }) {
               </h1>
               <p className="text-muted-foreground">Here's what's happening with your farm today.</p>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground mt-2 sm:mt-0">
               <MapPin className="h-4 w-4" />
-              <span>Punjab, India</span>
-              <Calendar className="h-4 w-4 ml-4" />
-              <span>Dec 13, 2024</span>
+              <span className="truncate max-w-[120px] sm:max-w-none">Punjab, India</span>
             </div>
           </div>
         </div>
@@ -199,17 +197,43 @@ function AuthProtectedDashboard({ user }: { user: any }) {
 
         {/* AI Features Tabs */}
         <Tabs defaultValue="recommendations" className="animate-fade-in-up">
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="recommendations" className="flex items-center space-x-2">
-              <Brain className="h-4 w-4" />
-              <span>Crop Recommendations</span>
+          {/* Make TabsList scrollable and more mobile-friendly */}
+          <TabsList
+            className="w-full flex flex-nowrap overflow-x-auto gap-2 mb-8 bg-transparent border-none shadow-none px-0 scrollbar-thin scrollbar-thumb-accent/30"
+            style={{
+              WebkitOverflowScrolling: "touch",
+              scrollbarWidth: "thin",
+              scrollbarColor: "#bbf7d0 #f0fdf4",
+            }}
+          >
+            <TabsTrigger
+              value="recommendations"
+              className="flex items-center gap-2 px-4 py-2 text-base whitespace-nowrap rounded-lg transition-all"
+              style={{ flex: "0 0 auto" }}
+            >
+              <span className="flex-shrink-0 flex items-center justify-center w-7 h-7">
+                <Brain className="h-6 w-6" />
+              </span>
+              <span className="font-semibold">Crop Recommendations</span>
             </TabsTrigger>
-            <TabsTrigger value="predictions" className="flex items-center space-x-2">
-              <TrendingUp className="h-4 w-4" />
+            <TabsTrigger
+              value="predictions"
+              className="flex items-center gap-2 min-w-[170px] px-4 py-2 text-base whitespace-nowrap rounded-lg transition-all"
+              style={{ flex: "0 0 auto" }}
+            >
+              <span className="flex-shrink-0 flex items-center justify-center w-6 h-6">
+                <TrendingUp className="h-5 w-5" />
+              </span>
               <span>Price Predictions</span>
             </TabsTrigger>
-            <TabsTrigger value="detection" className="flex items-center space-x-2">
-              <Shield className="h-4 w-4" />
+            <TabsTrigger
+              value="detection"
+              className="flex items-center gap-2 min-w-[170px] px-4 py-2 text-base whitespace-nowrap rounded-lg transition-all"
+              style={{ flex: "0 0 auto" }}
+            >
+              <span className="flex-shrink-0 flex items-center justify-center w-6 h-6">
+                <Shield className="h-5 w-5" />
+              </span>
               <span>Disease Detection</span>
             </TabsTrigger>
           </TabsList>

@@ -238,18 +238,18 @@ export default function RegisterPage() {
                 {/* Farm Details */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="farmSize">Farm Size</Label>
-                    <Select onValueChange={(value) => handleInputChange("farmSize", value)}>
-                      <SelectTrigger className="h-11">
-                        <SelectValue placeholder="Select farm size" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="small">Small (&lt; 2 acres)</SelectItem>
-                        <SelectItem value="medium">Medium (2-10 acres)</SelectItem>
-                        <SelectItem value="large">Large (10-50 acres)</SelectItem>
-                        <SelectItem value="commercial">Commercial (&gt; 50 acres)</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="farmSize">Farm Size (in acres)</Label>
+                    <Input
+                      id="farmSize"
+                      type="number"
+                      min={0}
+                      step={1}
+                      placeholder="Enter farm size"
+                      value={formData.farmSize}
+                      onChange={(e) => handleInputChange("farmSize", e.target.value)}
+                      required
+                      className="h-11"
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="location">Location</Label>
