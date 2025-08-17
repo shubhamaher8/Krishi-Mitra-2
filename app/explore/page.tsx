@@ -215,7 +215,7 @@ export default function ExplorePage() {
           <div className="container px-4">
             <div className="max-w-6xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-12 items-center">
-                <div className="animate-fade-in-up lg:order-2">
+                <div className="animate-fade-in-up order-2 lg:order-2">
                   <Card className="p-6">
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
@@ -278,7 +278,7 @@ export default function ExplorePage() {
                   </Card>
                 </div>
 
-                <div className="animate-slide-in-left lg:order-1">
+                <div className="animate-slide-in-left order-1 lg:order-1">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center">
                       <TrendingUp className="h-6 w-6 text-accent" />

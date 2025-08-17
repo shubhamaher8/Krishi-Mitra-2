@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import { supabase } from "@/lib/supabaseClient"
 import {
   Mail,
   Phone,
@@ -44,23 +45,48 @@ export default function ContactPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    try {
+      // Insert data into Supabase contact_messages table
+      const { data, error } = await supabase
+        .from('contact_messages')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.subject,
+            category: formData.category,
+            message: formData.message,
+            created_at: new Date().toISOString(),
+          }
+        ])
+        .select()
 
-    console.log("Contact form submitted:", formData)
-    setIsLoading(false)
+      if (error) {
+        console.error('Error submitting form:', error)
+        alert('Sorry, there was an error submitting your message. Please try again.')
+        return
+      }
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      subject: "",
-      category: "",
-      message: "",
-    })
+      console.log("Contact form submitted successfully:", data)
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        category: "",
+        message: "",
+      })
 
-    alert("Thank you for your message! We'll get back to you soon.")
+      alert("Thank you for your message! We'll get back to you soon.")
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('Sorry, there was an error submitting your message. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleInputChange = (field: string, value: string) => {
