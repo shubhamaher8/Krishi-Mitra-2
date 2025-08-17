@@ -37,10 +37,74 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
-function AuthProtectedDashboard({ user }: { user: any }) {
+function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile: any }) {
   const [selectedLocation, setSelectedLocation] = useState("")
   const [selectedCrop, setSelectedCrop] = useState("")
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [weatherData, setWeatherData] = useState<any>(null)
+  const [weatherLoading, setWeatherLoading] = useState(false)
+  const [activeTab, setActiveTab] = useState("recommendations")
+
+  // Function to fetch weather data
+  const fetchWeatherData = async (location: string) => {
+    if (!location) return
+    
+    setWeatherLoading(true)
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_WEATHER_API_HOST}?key=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&q=${encodeURIComponent(location)}&aqi=no`)
+
+      if (response.ok) {
+        const data = await response.json()
+        // Transform the data to match our expected format
+        const transformedData = {
+          temperature: data.current?.temp_c,
+          condition: data.current?.condition?.text,
+          humidity: data.current?.humidity,
+          wind_speed: data.current?.wind_kph,
+          feels_like: data.current?.feelslike_c,
+          rain_chance: data.forecast?.forecastday?.[0]?.day?.daily_chance_of_rain || 0,
+          location: data.location?.name,
+          region: data.location?.region,
+          country: data.location?.country
+        }
+        setWeatherData(transformedData)
+        // Store weather data in localStorage with timestamp for 24-hour caching
+        localStorage.setItem('weatherData', JSON.stringify({
+          data: transformedData,
+          timestamp: Date.now(),
+          location: location
+        }))
+      } else {
+        console.error('Weather API error:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error fetching weather data:', error)
+    } finally {
+      setWeatherLoading(false)
+    }
+  }
+
+  // Load weather data on component mount and when userProfile changes
+  useEffect(() => {
+    if (userProfile?.location) {
+      // Check if we have cached weather data for this location
+      const cachedWeather = localStorage.getItem('weatherData')
+      if (cachedWeather) {
+        const { data, timestamp, location } = JSON.parse(cachedWeather)
+        const is24HoursOld = Date.now() - timestamp > 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+        
+        if (location === userProfile.location && !is24HoursOld) {
+          setWeatherData(data)
+          return
+        }
+      }
+      
+      // Fetch fresh weather data
+      fetchWeatherData(userProfile.location)
+    }
+  }, [userProfile?.location])
+
+
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -86,6 +150,26 @@ function AuthProtectedDashboard({ user }: { user: any }) {
     }
   }
 
+  // Helper function to get weather icon based on condition
+  const getWeatherIcon = (condition: string) => {
+    const conditionLower = condition?.toLowerCase()
+    if (conditionLower?.includes('sunny') || conditionLower?.includes('clear') || conditionLower?.includes('partly cloudy')) {
+      return <Sun className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
+    } else if (conditionLower?.includes('cloudy') || conditionLower?.includes('overcast') || conditionLower?.includes('mist')) {
+      return <Sun className="h-8 w-8 text-gray-500 mx-auto mb-2" />
+    } else if (conditionLower?.includes('rain') || conditionLower?.includes('drizzle') || conditionLower?.includes('shower')) {
+      return <Droplets className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+    } else if (conditionLower?.includes('storm') || conditionLower?.includes('thunder') || conditionLower?.includes('lightning')) {
+      return <AlertTriangle className="h-8 w-8 text-red-500 mx-auto mb-2" />
+    } else if (conditionLower?.includes('snow') || conditionLower?.includes('sleet')) {
+      return <Droplets className="h-8 w-8 text-blue-300 mx-auto mb-2" />
+    } else if (conditionLower?.includes('fog') || conditionLower?.includes('haze')) {
+      return <Wind className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+    } else {
+      return <Sun className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
+    }
+  }
+
   return (
     <main className="flex-1 bg-muted/30 pt-20">
       <div className="container px-4 py-8">
@@ -96,14 +180,14 @@ function AuthProtectedDashboard({ user }: { user: any }) {
               <h1 className="text-3xl font-bold">
                 Welcome back,{" "}
                 <span className="bg-gradient-to-r from-green-600 to-green-500 bg-clip-text text-transparent">
-                  {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Farmer'}!
+                  {userProfile?.first_name || user?.email?.split('@')[0] || 'Farmer'}!
                 </span>
               </h1>
               <p className="text-muted-foreground">Here's what's happening with your farm today.</p>
             </div>
             <div className="flex items-center space-x-2 text-sm text-muted-foreground mt-2 sm:mt-0">
               <MapPin className="h-4 w-4" />
-              <span className="truncate max-w-[120px] sm:max-w-none">Punjab, India</span>
+              <span className="truncate max-w-[120px] sm:max-w-none">{userProfile?.location || 'Location not set'}</span>
             </div>
           </div>
         </div>
@@ -115,7 +199,7 @@ function AuthProtectedDashboard({ user }: { user: any }) {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">Farm Area</p>
-                  <p className="text-2xl font-bold">25 acres</p>
+                  <p className="text-2xl font-bold">{userProfile?.farm_size || '25'} acres</p>
                 </div>
                 <Target className="h-8 w-8 text-accent" />
               </div>
@@ -125,8 +209,8 @@ function AuthProtectedDashboard({ user }: { user: any }) {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Active Crops</p>
-                  <p className="text-2xl font-bold">3 types</p>
+                  <p className="text-sm text-muted-foreground">Primary Crop</p>
+                  <p className="text-2xl font-bold">{userProfile?.primary_crop || 'Wheat'}</p>
                 </div>
                 <Leaf className="h-8 w-8 text-accent" />
               </div>
@@ -158,85 +242,179 @@ function AuthProtectedDashboard({ user }: { user: any }) {
 
         {/* Weather Widget */}
         <Card className="mb-8 animate-fade-in-up">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Sun className="h-5 w-5 text-accent" />
-              <span>Current Weather</span>
-            </CardTitle>
-          </CardHeader>
+                     <CardHeader>
+             <CardTitle className="flex items-center space-x-2">
+               <Sun className="h-5 w-5 text-accent" />
+               <span>Current Weather - {weatherData?.location || userProfile?.location || 'Location not set'}</span>
+             </CardTitle>
+           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              <div className="text-center">
-                <Sun className="h-8 w-8 text-yellow-500 mx-auto mb-2" />
-                <p className="text-2xl font-bold">28°C</p>
-                <p className="text-sm text-muted-foreground">Sunny</p>
+            {weatherLoading ? (
+              <div className="flex items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent"></div>
+                <span className="ml-2 text-muted-foreground">Loading weather data...</span>
               </div>
-              <div className="text-center">
-                <Droplets className="h-6 w-6 text-blue-500 mx-auto mb-2" />
-                <p className="text-lg font-semibold">65%</p>
-                <p className="text-sm text-muted-foreground">Humidity</p>
+            ) : weatherData ? (
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div className="text-center">
+                  {getWeatherIcon(weatherData.condition)}
+                  <p className="text-2xl font-bold">{weatherData.temperature}°C</p>
+                  <p className="text-sm text-muted-foreground">{weatherData.condition || 'Clear'}</p>
+                </div>
+                <div className="text-center">
+                  <Droplets className="h-6 w-6 text-blue-500 mx-auto mb-2" />
+                  <p className="text-lg font-semibold">{weatherData.humidity || '65'}%</p>
+                  <p className="text-sm text-muted-foreground">Humidity</p>
+                </div>
+                <div className="text-center">
+                  <Wind className="h-6 w-6 text-gray-500 mx-auto mb-2" />
+                  <p className="text-lg font-semibold">{weatherData.wind_speed || '12'} km/h</p>
+                  <p className="text-sm text-muted-foreground">Wind</p>
+                </div>
+                <div className="text-center">
+                  <Thermometer className="h-6 w-6 text-red-500 mx-auto mb-2" />
+                  <p className="text-lg font-semibold">{weatherData.feels_like || weatherData.temperature}°C</p>
+                  <p className="text-sm text-muted-foreground">Feels like</p>
+                </div>
+                <div className="text-center">
+                  <Droplets className="h-6 w-6 text-blue-600 mx-auto mb-2" />
+                  <p className="text-lg font-semibold">{weatherData.rain_chance || '0'}%</p>
+                  <p className="text-sm text-muted-foreground">Rain chance</p>
+                </div>
               </div>
-              <div className="text-center">
-                <Wind className="h-6 w-6 text-gray-500 mx-auto mb-2" />
-                <p className="text-lg font-semibold">12 km/h</p>
-                <p className="text-sm text-muted-foreground">Wind</p>
+            ) : (
+              <div className="text-center py-8">
+                <Sun className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
+                <p className="text-muted-foreground">Weather data unavailable</p>
+                {userProfile?.location && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => fetchWeatherData(userProfile.location)}
+                    className="mt-2"
+                  >
+                    Retry
+                  </Button>
+                )}
               </div>
-              <div className="text-center">
-                <Thermometer className="h-6 w-6 text-red-500 mx-auto mb-2" />
-                <p className="text-lg font-semibold">32°C</p>
-                <p className="text-sm text-muted-foreground">Feels like</p>
-              </div>
-              <div className="text-center">
-                <Droplets className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-                <p className="text-lg font-semibold">0%</p>
-                <p className="text-sm text-muted-foreground">Rain chance</p>
-              </div>
-            </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* AI Features Tabs */}
-        <Tabs defaultValue="recommendations" className="animate-fade-in-up">
-          {/* Make TabsList scrollable and more mobile-friendly */}
-          <TabsList
-            className="w-full flex flex-nowrap overflow-x-auto gap-2 mb-8 bg-transparent border-none shadow-none px-0 scrollbar-thin scrollbar-thumb-accent/30"
-            style={{
-              WebkitOverflowScrolling: "touch",
-              scrollbarWidth: "thin",
-              scrollbarColor: "#bbf7d0 #f0fdf4",
-            }}
-          >
-            <TabsTrigger
-              value="recommendations"
-              className="flex items-center gap-2 px-4 py-2 text-base whitespace-nowrap rounded-lg transition-all"
-              style={{ flex: "0 0 auto" }}
-            >
-              <span className="flex-shrink-0 flex items-center justify-center w-7 h-7">
-                <Brain className="h-6 w-6" />
-              </span>
-              <span className="font-semibold">Crop Recommendations</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="predictions"
-              className="flex items-center gap-2 min-w-[170px] px-4 py-2 text-base whitespace-nowrap rounded-lg transition-all"
-              style={{ flex: "0 0 auto" }}
-            >
-              <span className="flex-shrink-0 flex items-center justify-center w-6 h-6">
-                <TrendingUp className="h-5 w-5" />
-              </span>
-              <span>Price Predictions</span>
-            </TabsTrigger>
-            <TabsTrigger
-              value="detection"
-              className="flex items-center gap-2 min-w-[170px] px-4 py-2 text-base whitespace-nowrap rounded-lg transition-all"
-              style={{ flex: "0 0 auto" }}
-            >
-              <span className="flex-shrink-0 flex items-center justify-center w-6 h-6">
-                <Shield className="h-5 w-5" />
-              </span>
-              <span>Disease Detection</span>
-            </TabsTrigger>
-          </TabsList>
+                 {/* AI Features Tabs */}
+         <Tabs value={activeTab} onValueChange={setActiveTab} className="animate-fade-in-up">
+           {/* Mobile: Vertical tabs, Desktop: Horizontal tabs */}
+           <div className="block sm:hidden mb-6">
+             {/* Mobile Vertical Navigation */}
+             <div className="space-y-3">
+               <button
+                 onClick={() => setActiveTab("recommendations")}
+                 className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                   activeTab === "recommendations" 
+                     ? "bg-accent/10 border-accent/20" 
+                     : "bg-muted/50 border-muted/30 hover:bg-muted/70"
+                 }`}
+               >
+                 <span className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full ${
+                   activeTab === "recommendations" ? "bg-accent/20" : "bg-muted"
+                 }`}>
+                   <Brain className={`h-5 w-5 ${
+                     activeTab === "recommendations" ? "text-accent" : "text-muted-foreground"
+                   }`} />
+                 </span>
+                 <div className="text-left">
+                   <div className="font-semibold text-sm">Crop Recommendations</div>
+                   <div className="text-xs text-muted-foreground">AI-powered crop suggestions</div>
+                 </div>
+               </button>
+               
+               <button
+                 onClick={() => setActiveTab("predictions")}
+                 className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                   activeTab === "predictions" 
+                     ? "bg-accent/10 border-accent/20" 
+                     : "bg-muted/50 border-muted/30 hover:bg-muted/70"
+                 }`}
+               >
+                 <span className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full ${
+                   activeTab === "predictions" ? "bg-accent/20" : "bg-muted"
+                 }`}>
+                   <TrendingUp className={`h-5 w-5 ${
+                     activeTab === "predictions" ? "text-accent" : "text-muted-foreground"
+                   }`} />
+                 </span>
+                 <div className="text-left">
+                   <div className="font-semibold text-sm">Price Predictions</div>
+                   <div className="text-xs text-muted-foreground">Market forecasting tools</div>
+                 </div>
+               </button>
+               
+               <button
+                 onClick={() => setActiveTab("detection")}
+                 className={`w-full flex items-center gap-3 p-4 rounded-lg border transition-all ${
+                   activeTab === "detection" 
+                     ? "bg-accent/10 border-accent/20" 
+                     : "bg-muted/50 border-muted/30 hover:bg-muted/70"
+                 }`}
+               >
+                 <span className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full ${
+                   activeTab === "detection" ? "bg-accent/20" : "bg-muted"
+                 }`}>
+                   <Shield className={`h-5 w-5 ${
+                     activeTab === "detection" ? "text-accent" : "text-muted-foreground"
+                   }`} />
+                 </span>
+                 <div className="text-left">
+                   <div className="font-semibold text-sm">Disease Detection</div>
+                   <div className="text-xs text-muted-foreground">AI-powered crop analysis</div>
+                 </div>
+               </button>
+             </div>
+           </div>
+
+           {/* Desktop: Horizontal tabs */}
+           <TabsList
+             className="hidden sm:flex w-full flex-nowrap overflow-x-auto gap-3 mb-8 bg-transparent border-none shadow-none px-0 scrollbar-thin scrollbar-thumb-accent/30"
+             style={{
+               WebkitOverflowScrolling: "touch",
+               scrollbarWidth: "thin",
+               scrollbarColor: "#bbf7d0 #f0fdf4",
+             }}
+           >
+             <TabsTrigger
+               value="recommendations"
+               className="flex items-center gap-2 px-6 py-3 text-sm sm:text-base whitespace-nowrap rounded-lg transition-all min-w-[200px] sm:min-w-[220px]"
+               style={{ flex: "0 0 auto" }}
+               data-value="recommendations"
+             >
+               <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7">
+                 <Brain className="h-5 w-5 sm:h-6 sm:w-6" />
+               </span>
+               <span className="font-semibold text-xs sm:text-sm">Crop Recommendations</span>
+             </TabsTrigger>
+             <TabsTrigger
+               value="predictions"
+               className="flex items-center gap-2 px-6 py-3 text-sm sm:text-base whitespace-nowrap rounded-lg transition-all min-w-[180px] sm:min-w-[200px]"
+               style={{ flex: "0 0 auto" }}
+               data-value="predictions"
+             >
+               <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7">
+                 <TrendingUp className="h-5 w-5 sm:h-6 sm:w-6" />
+               </span>
+               <span className="text-xs sm:text-sm">Price Predictions</span>
+             </TabsTrigger>
+             <TabsTrigger
+               value="detection"
+               className="flex items-center gap-2 px-6 py-3 text-sm sm:text-base whitespace-nowrap rounded-lg transition-all min-w-[180px] sm:min-w-[200px]"
+               style={{ flex: "0 0 auto" }}
+               data-value="detection"
+             >
+               <span className="flex-shrink-0 flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7">
+                 <Shield className="h-5 w-5 sm:h-6 sm:w-6" />
+               </span>
+               <span className="text-xs sm:text-sm">Disease Detection</span>
+             </TabsTrigger>
+           </TabsList>
 
           {/* Crop Recommendations Tab */}
           <TabsContent value="recommendations" className="space-y-6">
@@ -247,21 +425,17 @@ function AuthProtectedDashboard({ user }: { user: any }) {
                   <CardDescription>Enter your farm details to get AI-powered crop suggestions</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Farm Location</Label>
-                    <Select onValueChange={setSelectedLocation}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select your location" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="punjab">Punjab</SelectItem>
-                        <SelectItem value="haryana">Haryana</SelectItem>
-                        <SelectItem value="uttar-pradesh">Uttar Pradesh</SelectItem>
-                        <SelectItem value="maharashtra">Maharashtra</SelectItem>
-                        <SelectItem value="gujarat">Gujarat</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                                     <div className="space-y-2">
+                     <Label htmlFor="location">Farm Location</Label>
+                     <input
+                       type="text"
+                       id="location"
+                       placeholder="Enter your farm location (e.g., Punjab, India)"
+                       defaultValue={userProfile?.location || ""}
+                       onChange={(e) => setSelectedLocation(e.target.value)}
+                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                     />
+                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="season">Season</Label>
                     <Select>
@@ -724,6 +898,7 @@ function LoginPrompt() {
 export default function DashboardPage() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
   const [user, setUser] = useState<any>(null)
+  const [userProfile, setUserProfile] = useState<any>(null)
 
   useEffect(() => {
     // Check current auth state
@@ -731,18 +906,50 @@ export default function DashboardPage() {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       setIsAuthenticated(!!user)
+      
+      // If user is authenticated, fetch their profile from users table
+      if (user) {
+        await fetchUserProfile(user.id)
+      }
     }
 
     checkAuth()
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
       setIsAuthenticated(!!session?.user)
+      
+      // If user is authenticated, fetch their profile from users table
+      if (session?.user) {
+        await fetchUserProfile(session.user.id)
+      } else {
+        setUserProfile(null)
+      }
     })
 
     return () => subscription.unsubscribe()
   }, [])
+
+  // Function to fetch user profile from users table
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+      if (error) {
+        console.error('Error fetching user profile:', error)
+        return
+      }
+
+      setUserProfile(data)
+    } catch (error) {
+      console.error('Error fetching user profile:', error)
+    }
+  }
 
   // Show loading state while checking authentication
   if (isAuthenticated === null) {
@@ -874,7 +1081,7 @@ export default function DashboardPage() {
 
       <Header />
 
-      {isAuthenticated ? <AuthProtectedDashboard user={user} /> : <LoginPrompt />}
+      {isAuthenticated ? <AuthProtectedDashboard user={user} userProfile={userProfile} /> : <LoginPrompt />}
 
       <Footer />
     </div>
