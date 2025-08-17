@@ -12,12 +12,14 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "KrishiMitra 2.0 - AI-Powered Agriculture Solutions",
   description: "Advanced AI tools for crop recommendations, price predictions, and disease detection",
-  generator: "v0.app",
   icons: {
     icon: "/favicon.ico",
   },
-  themeColor: "#22c55e",
 }
+
+export const viewport = {
+  themeColor: "#22c55e", 
+};
 
 export default function RootLayout({
   children,
