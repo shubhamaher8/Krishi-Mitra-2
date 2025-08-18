@@ -54,7 +54,7 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
     
     setWeatherLoading(true)
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_WEATHER_API_HOST}?key=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&q=${encodeURIComponent(location)}&aqi=no`)
+      const response = await fetch(`/api/weather?location=${encodeURIComponent(location)}`)
 
       if (response.ok) {
         const data = await response.json()
