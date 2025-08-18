@@ -84,10 +84,10 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   asChild
-                  className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
+                  className="text-base sm:text-lg w-52 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
                 >
                   <Link href="/register">
-                    Get Started Free
+                    Get Started
                     <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                   </Link>
                 </Button>
@@ -188,7 +188,7 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center justify-center gap-2">
                       <div className="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>
-                      <span>Export/import insights</span>
+                      <span>Predictive insights</span>
                     </li>
                   </ul>
                   <Button
@@ -233,7 +233,7 @@ export default function HomePage() {
                     </li>
                     <li className="flex items-center justify-center gap-2">
                       <div className="w-2 h-2 bg-accent-blue rounded-full flex-shrink-0"></div>
-                      <span>Expert consultation</span>
+                      <span>AI consultation</span>
                     </li>
                   </ul>
                   <Button
@@ -346,19 +346,12 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   asChild
-                  className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
+                  className="text-base sm:text-lg w-52 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
                 >
                   <Link href="/register">
-                    Start Free Trial
+                    Start Now
                     <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
                   </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  asChild
-                  className="text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-400 to-white hover:from-green-500 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
-                >
-                  <Link href="/contact">Contact Sales</Link>
                 </Button>
               </div>
             </div>
