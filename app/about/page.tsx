@@ -25,7 +25,7 @@ export default function AboutPage() {
   const teamMembers = [
     {
       name: "Shubham Aher",
-      role: "CEO & Co-founder",
+      role: "CEO & Founder",
       expertise: "Web Development",
       image: "/Shubham.png",
     },
@@ -43,9 +43,9 @@ export default function AboutPage() {
     },
     {
       name: "Shreenand Bandre",
-      role: "CTO & Co-founder",
+      role: "CXO & Co-founder",
       expertise: "AI and Machine Learning",
-      image: "/placeholder-user.png",
+      image: "/Shreenand.png",
     },
   ]
 
