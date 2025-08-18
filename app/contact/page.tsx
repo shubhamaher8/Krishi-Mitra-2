@@ -97,26 +97,28 @@ export default function ContactPage() {
     {
       icon: Mail,
       title: "Email Us",
-      details: "support@krishimitra.com",
+      details: "yodha925@gmail.com",
       description: "Send us an email anytime",
+      href: "mailto:yodha925@gmail.com",
     },
     {
       icon: Phone,
       title: "Call Us",
-      details: "+91 98765 43210",
+      details: "+91 82087 56254",
       description: "Mon-Fri from 9am to 6pm",
-      href: "tel:+919876543210",
+      href: "tel:+918208756254",
     },
     {
       icon: MapPin,
       title: "Visit Us",
-      details: "New Delhi, India",
-      description: "Agricultural Technology Hub",
+      details: "Pune, India",
+      description: "VIIT College Pune",
+      href: "https://maps.google.com/?q=Pune,+India",
     },
     {
       icon: Clock,
       title: "Support Hours",
-      details: "24/7 AI Support",
+      details: "Fast",
       description: "Human support: 9am-6pm IST",
     },
   ]
@@ -469,11 +471,11 @@ export default function ContactPage() {
                         <div>
                           <p className="font-medium">Address</p>
                           <p className="text-sm text-muted-foreground">
-                            Agricultural Technology Park
+                            VIIT College,
                             <br />
-                            Sector 62, Noida
+                            Pune, Maharashtra
                             <br />
-                            Uttar Pradesh 201309, India
+                            411041, India
                           </p>
                         </div>
                       </div>
@@ -495,10 +497,10 @@ export default function ContactPage() {
                         <div>
                           <p className="font-medium">Phone</p>
                           <a
-                            href="tel:+919876543210"
+                            href="tel:+918208756254"
                             className="text-sm text-muted-foreground hover:text-accent transition-colors"
                           >
-                            +91 98765 43210
+                            +91 82087 56254
                           </a>
                         </div>
                       </div>
@@ -546,7 +548,7 @@ export default function ContactPage() {
                       </div>
                       <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2 shadow-md">
                         <p className="text-xs font-medium text-gray-800">KrishiMitra HQ</p>
-                        <p className="text-xs text-gray-600">Noida, UP</p>
+                        <p className="text-xs text-gray-600">Pune, Maharashtra</p>
                       </div>
                     </div>
 
