@@ -85,27 +85,27 @@ export function Footer() {
               <li className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-muted-foreground" />
                 <a
-                  href="mailto:support@krishimitra.com"
+                  href="mailto:yodha925@gmail.com"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
-                  support@krishimitra.com
+                  yodha925@gmail.com
                 </a>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                <a href="tel:+919876543210" className="text-muted-foreground hover:text-accent transition-colors">
-                  +91 98765 43210
+                <a href="tel:+918208756254" className="text-muted-foreground hover:text-accent transition-colors">
+                  +91 82087 56254
                 </a>
               </li>
               <li className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <a
-                  href="https://maps.google.com/?q=New+Delhi,+India"
+                  href="https://maps.google.com/?q=Pune,+India"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
-                  New Delhi, India
+                  Pune, India
                 </a>
               </li>
             </ul>
@@ -113,7 +113,7 @@ export function Footer() {
         </div>
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 KrishiMitra 2.0. All rights reserved. Built with AI for farmers.</p>
+          <p>&copy; 2024 KrishiMitra 2.0. All rights reserved.</p>
         </div>
       </div>
     </footer>
