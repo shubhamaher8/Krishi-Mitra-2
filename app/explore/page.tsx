@@ -126,7 +126,7 @@ export default function ExplorePage() {
                       <div>
                         <h3 className="font-semibold mb-1">Soil Analysis Integration</h3>
                         <p className="text-sm text-muted-foreground">
-                          Connect with soil testing labs or use our mobile app to input soil data for precise
+                          Connect with soil monitoring services or use our web app to input soil data for precise
                           recommendations.
                         </p>
                       </div>
@@ -287,7 +287,7 @@ export default function ExplorePage() {
                   </div>
                   <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
                     Make informed selling decisions with our advanced price prediction models that analyze historical
-                    trends, market dynamics, and external factors affecting crop prices.
+                    trends, market dynamics, and factors affecting crop prices.
                   </p>
 
                   <div className="space-y-4 mb-8">
@@ -296,7 +296,7 @@ export default function ExplorePage() {
                       <div>
                         <h3 className="font-semibold mb-1">Historical Analysis</h3>
                         <p className="text-sm text-muted-foreground">
-                          Analyze 10+ years of price data to identify patterns and seasonal trends.
+                          Prediction based on previous price data and trends.
                         </p>
                       </div>
                     </div>
@@ -305,7 +305,7 @@ export default function ExplorePage() {
                       <div>
                         <h3 className="font-semibold mb-1">Market Factors</h3>
                         <p className="text-sm text-muted-foreground">
-                          Consider supply-demand dynamics, export policies, and global market conditions.
+                          Consider multiple market factors to enhance prediction accuracy.
                         </p>
                       </div>
                     </div>
@@ -314,7 +314,7 @@ export default function ExplorePage() {
                       <div>
                         <h3 className="font-semibold mb-1">Timing Optimization</h3>
                         <p className="text-sm text-muted-foreground">
-                          Get alerts for optimal selling times to maximize your profits.
+                          Get optimal selling times to maximize your profits.
                         </p>
                       </div>
                     </div>
@@ -359,7 +359,7 @@ export default function ExplorePage() {
                       <div>
                         <h3 className="font-semibold mb-1">Instant Diagnosis</h3>
                         <p className="text-sm text-muted-foreground">
-                          AI-powered image analysis provides results in seconds with 95%+ accuracy.
+                          AI-powered image analysis provides results in seconds with 90% accuracy.
                         </p>
                       </div>
                     </div>
@@ -377,7 +377,7 @@ export default function ExplorePage() {
                       <div>
                         <h3 className="font-semibold mb-1">Prevention Tips</h3>
                         <p className="text-sm text-muted-foreground">
-                          Learn how to prevent future occurrences with expert agricultural advice.
+                          Learn how to prevent future occurrences with AI agricultural advice.
                         </p>
                       </div>
                     </div>
@@ -483,7 +483,7 @@ export default function ExplorePage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-muted/30">
+        <section className="py-20 bg-muted/30 bg-gradient-to-r from-green-50 to-green-100">
           <div className="container px-4">
             <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
               <h2 className="text-3xl lg:text-4xl font-bold mb-6">Ready to Experience AI Agriculture?</h2>
@@ -491,25 +491,6 @@ export default function ExplorePage() {
                 Join thousands of farmers who are already using KrishiMitra 2.0 to improve their crop yields and
                 profits.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  asChild
-                  className="text-lg px-8 py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold"
-                >
-                  <Link href="/register">
-                    Start Your Free Trial
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  asChild
-                  className="text-lg px-8 py-4 bg-gradient-to-r from-green-400 to-white hover:from-green-500 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold"
-                >
-                  <Link href="/dashboard">View Dashboard</Link>
-                </Button>
-              </div>
             </div>
           </div>
         </section>
