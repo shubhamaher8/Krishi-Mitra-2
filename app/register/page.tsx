@@ -277,9 +277,21 @@ export default function RegisterPage() {
                       <SelectItem value="corn">Corn</SelectItem>
                       <SelectItem value="cotton">Cotton</SelectItem>
                       <SelectItem value="sugarcane">Sugarcane</SelectItem>
-                      <SelectItem value="vegetables">Vegetables</SelectItem>
-                      <SelectItem value="fruits">Fruits</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
+                      <SelectItem value="jowar">Jowar</SelectItem>
+                      <SelectItem value="bajra">Bajra</SelectItem>
+                      <SelectItem value="tur">Tur</SelectItem>
+                      <SelectItem value="moong">Moong</SelectItem>
+                      <SelectItem value="urad">Urad</SelectItem>
+                      <SelectItem value="soyabean">Soyabean</SelectItem>
+                      <SelectItem value="groundnut">Groundnut</SelectItem>
+                      <SelectItem value="sunflower">Sunflower</SelectItem>
+                      <SelectItem value="onion">Onion</SelectItem>
+                      <SelectItem value="potato">Potato</SelectItem>
+                      <SelectItem value="tomato">Tomato</SelectItem>
+                      <SelectItem value="chillies">Chillies</SelectItem>
+                      <SelectItem value="banana">Banana</SelectItem>
+                      <SelectItem value="grapes">Grapes</SelectItem>
+                      <SelectItem value="pomegranate">Pomegranate</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

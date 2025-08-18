@@ -425,43 +425,68 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                   <CardDescription>Enter your farm details to get AI-powered crop suggestions</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                                     <div className="space-y-2">
-                     <Label htmlFor="location">Farm Location</Label>
-                     <input
-                       type="text"
-                       id="location"
-                       placeholder="Enter your farm location (e.g., Punjab, India)"
-                       defaultValue={userProfile?.location || ""}
-                       onChange={(e) => setSelectedLocation(e.target.value)}
-                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                     />
-                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="season">Season</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select season" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="kharif">Kharif (Monsoon)</SelectItem>
-                        <SelectItem value="rabi">Rabi (Winter)</SelectItem>
-                        <SelectItem value="zaid">Zaid (Summer)</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="nitrogen">Nitrogen (N)</Label>
+                    <input
+                      type="number"
+                      id="nitrogen"
+                      placeholder="Enter Nitrogen (N)"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="soil">Soil Type</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select soil type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="alluvial">Alluvial</SelectItem>
-                        <SelectItem value="clay">Clay</SelectItem>
-                        <SelectItem value="sandy">Sandy</SelectItem>
-                        <SelectItem value="loamy">Loamy</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="phosphorus">Phosphorus (P)</Label>
+                    <input
+                      type="number"
+                      id="phosphorus"
+                      placeholder="Enter Phosphorus (P)"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="potassium">Potassium (K)</Label>
+                    <input
+                      type="number"
+                      id="potassium"
+                      placeholder="Enter Potassium (K)"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="temperature">Temperature (°C)</Label>
+                    <input
+                      type="number"
+                      id="temperature"
+                      placeholder="Enter Temperature (°C)"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="humidity">Humidity (%)</Label>
+                    <input
+                      type="number"
+                      id="humidity"
+                      placeholder="Enter Humidity (%)"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="ph">pH</Label>
+                    <input
+                      type="number"
+                      id="ph"
+                      placeholder="Enter pH"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="rainfall">Rainfall (mm)</Label>
+                    <input
+                      type="number"
+                      id="rainfall"
+                      placeholder="Enter Rainfall (mm)"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
                   </div>
                   <Button className="w-full">
                     <Brain className="mr-2 h-4 w-4" />
@@ -553,19 +578,66 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                         <SelectItem value="corn">Corn</SelectItem>
                         <SelectItem value="cotton">Cotton</SelectItem>
                         <SelectItem value="sugarcane">Sugarcane</SelectItem>
+                        <SelectItem value="jowar">Jowar</SelectItem>
+                        <SelectItem value="bajra">Bajra</SelectItem>
+                        <SelectItem value="tur">Tur</SelectItem>
+                        <SelectItem value="moong">Moong</SelectItem>
+                        <SelectItem value="urad">Urad</SelectItem>
+                        <SelectItem value="soyabean">Soyabean</SelectItem>
+                        <SelectItem value="groundnut">Groundnut</SelectItem>
+                        <SelectItem value="sunflower">Sunflower</SelectItem>
+                        <SelectItem value="onion">Onion</SelectItem>
+                        <SelectItem value="potato">Potato</SelectItem>
+                        <SelectItem value="tomato">Tomato</SelectItem>
+                        <SelectItem value="chillies">Chillies</SelectItem>
+                        <SelectItem value="banana">Banana</SelectItem>
+                        <SelectItem value="grapes">Grapes</SelectItem>
+                        <SelectItem value="pomegranate">Pomegranate</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="market">Market</Label>
+                    <Label htmlFor="district">District</Label>
                     <Select>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select market" />
+                        <SelectValue placeholder="Select District"/>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="local">Local Market</SelectItem>
-                        <SelectItem value="mandi">Mandi</SelectItem>
-                        <SelectItem value="export">Export Market</SelectItem>
+                        <SelectItem value="ahmednagar">Ahmednagar</SelectItem>
+                        <SelectItem value="akola">Akola</SelectItem>
+                        <SelectItem value="amravati">Amravati</SelectItem>
+                        <SelectItem value="aurangabad">Aurangabad</SelectItem>
+                        <SelectItem value="beed">Beed</SelectItem>
+                        <SelectItem value="bhandara">Bhandara</SelectItem>
+                        <SelectItem value="buldhana">Buldhana</SelectItem>
+                        <SelectItem value="chandrapur">Chandrapur</SelectItem>
+                        <SelectItem value="dhule">Dhule</SelectItem>
+                        <SelectItem value="gadchiroli">Gadchiroli</SelectItem>
+                        <SelectItem value="gondia">Gondia</SelectItem>
+                        <SelectItem value="hingoli">Hingoli</SelectItem>
+                        <SelectItem value="jalgaon">Jalgaon</SelectItem>
+                        <SelectItem value="jalna">Jalna</SelectItem>
+                        <SelectItem value="kolhapur">Kolhapur</SelectItem>
+                        <SelectItem value="latur">Latur</SelectItem>
+                        <SelectItem value="mumbai city">Mumbai City</SelectItem>
+                        <SelectItem value="mumbai suburban">Mumbai Suburban</SelectItem>
+                        <SelectItem value="nagpur">Nagpur</SelectItem>
+                        <SelectItem value="nanded">Nanded</SelectItem>
+                        <SelectItem value="nandurbar">Nandurbar</SelectItem>
+                        <SelectItem value="nashik">Nashik</SelectItem>
+                        <SelectItem value="osmanabad">Osmanabad</SelectItem>
+                        <SelectItem value="parbhani">Parbhani</SelectItem>
+                        <SelectItem value="pune">Pune</SelectItem>
+                        <SelectItem value="raigad">Raigad</SelectItem>
+                        <SelectItem value="ratnagiri">Ratnagiri</SelectItem>
+                        <SelectItem value="sangli">Sangli</SelectItem>
+                        <SelectItem value="satara">Satara</SelectItem>
+                        <SelectItem value="sindhudurg">Sindhudurg</SelectItem>
+                        <SelectItem value="solapur">Solapur</SelectItem>
+                        <SelectItem value="thane">Thane</SelectItem>
+                        <SelectItem value="wardha">Wardha</SelectItem>
+                        <SelectItem value="washim">Washim</SelectItem>
+                        <SelectItem value="yavatmal">Yavatmal</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
