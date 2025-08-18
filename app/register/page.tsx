@@ -73,8 +73,8 @@ export default function RegisterPage() {
       return
     }
 
-    // Redirect to dashboard after successful registration
-    router.push("/dashboard")
+    // Redirect to home page after successful registration
+    router.push("/")
   }
 
   // Helper to insert user profile data into users table
@@ -272,26 +272,26 @@ export default function RegisterPage() {
                       <SelectValue placeholder="Select your main crop" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="wheat">Wheat</SelectItem>
-                      <SelectItem value="rice">Rice</SelectItem>
-                      <SelectItem value="corn">Corn</SelectItem>
-                      <SelectItem value="cotton">Cotton</SelectItem>
-                      <SelectItem value="sugarcane">Sugarcane</SelectItem>
-                      <SelectItem value="jowar">Jowar</SelectItem>
-                      <SelectItem value="bajra">Bajra</SelectItem>
-                      <SelectItem value="tur">Tur</SelectItem>
-                      <SelectItem value="moong">Moong</SelectItem>
-                      <SelectItem value="urad">Urad</SelectItem>
-                      <SelectItem value="soyabean">Soyabean</SelectItem>
-                      <SelectItem value="groundnut">Groundnut</SelectItem>
-                      <SelectItem value="sunflower">Sunflower</SelectItem>
-                      <SelectItem value="onion">Onion</SelectItem>
-                      <SelectItem value="potato">Potato</SelectItem>
-                      <SelectItem value="tomato">Tomato</SelectItem>
-                      <SelectItem value="chillies">Chillies</SelectItem>
-                      <SelectItem value="banana">Banana</SelectItem>
-                      <SelectItem value="grapes">Grapes</SelectItem>
-                      <SelectItem value="pomegranate">Pomegranate</SelectItem>
+                      <SelectItem value="Wheat">Wheat</SelectItem>
+                      <SelectItem value="Rice">Rice</SelectItem>
+                      <SelectItem value="Corn">Corn</SelectItem>
+                      <SelectItem value="Cotton">Cotton</SelectItem>
+                      <SelectItem value="Sugarcane">Sugarcane</SelectItem>
+                      <SelectItem value="Jowar">Jowar</SelectItem>
+                      <SelectItem value="Bajra">Bajra</SelectItem>
+                      <SelectItem value="Tur">Tur</SelectItem>
+                      <SelectItem value="Moong">Moong</SelectItem>
+                      <SelectItem value="Urad">Urad</SelectItem>
+                      <SelectItem value="Soyabean">Soyabean</SelectItem>
+                      <SelectItem value="Groundnut">Groundnut</SelectItem>
+                      <SelectItem value="Sunflower">Sunflower</SelectItem>
+                      <SelectItem value="Onion">Onion</SelectItem>
+                      <SelectItem value="Potato">Potato</SelectItem>
+                      <SelectItem value="Tomato">Tomato</SelectItem>
+                      <SelectItem value="Chillies">Chillies</SelectItem>
+                      <SelectItem value="Banana">Banana</SelectItem>
+                      <SelectItem value="Grapes">Grapes</SelectItem>
+                      <SelectItem value="Pomegranate">Pomegranate</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -350,29 +350,6 @@ export default function RegisterPage() {
                           <Eye className="h-4 w-4 text-muted-foreground" />
                         )}
                       </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Password Requirements */}
-                <div className="text-xs text-muted-foreground space-y-1">
-                  <p>Password must contain:</p>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="h-3 w-3 text-accent" />
-                      <span>At least 8 characters</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="h-3 w-3 text-accent" />
-                      <span>One uppercase letter</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="h-3 w-3 text-accent" />
-                      <span>One number</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="h-3 w-3 text-accent" />
-                      <span>One special character</span>
                     </div>
                   </div>
                 </div>
