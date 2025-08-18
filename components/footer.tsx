@@ -53,7 +53,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  href="/dashboard?tab=crop-recommendations"
+                  href="/explore"
                   className="text-muted-foreground hover:text-accent transition-colors cursor-pointer"
                 >
                   Crop Recommendations
@@ -61,7 +61,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/dashboard?tab=price-predictions"
+                  href="/explore"
                   className="text-muted-foreground hover:text-accent transition-colors cursor-pointer"
                 >
                   Price Predictions
@@ -69,7 +69,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/dashboard?tab=disease-detection"
+                  href="/explore"
                   className="text-muted-foreground hover:text-accent transition-colors cursor-pointer"
                 >
                   Disease Detection
