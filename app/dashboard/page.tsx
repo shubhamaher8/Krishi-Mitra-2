@@ -91,9 +91,9 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
       const cachedWeather = localStorage.getItem('weatherData')
       if (cachedWeather) {
         const { data, timestamp, location } = JSON.parse(cachedWeather)
-        const is24HoursOld = Date.now() - timestamp > 24 * 60 * 60 * 1000 // 24 hours in milliseconds
+        const is5MinutesOld = Date.now() - timestamp > 5 * 60 * 1000 // 5 minutes in milliseconds
         
-        if (location === userProfile.location && !is24HoursOld) {
+        if (location === userProfile.location && !is5MinutesOld) {
           setWeatherData(data)
           return
         }
@@ -255,11 +255,11 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                 <span className="ml-2 text-muted-foreground">Loading weather data...</span>
               </div>
             ) : weatherData ? (
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-center mx-auto">
                 <div className="text-center">
                   {getWeatherIcon(weatherData.condition)}
-                  <p className="text-2xl font-bold">{weatherData.temperature}°C</p>
-                  <p className="text-sm text-muted-foreground">{weatherData.condition || 'Clear'}</p>
+                  <p className="text-lg font-semibold">{weatherData.condition || 'Clear'}</p>
+                  <p className="text-sm text-muted-foreground">Condition</p>
                 </div>
                 <div className="text-center">
                   <Droplets className="h-6 w-6 text-blue-500 mx-auto mb-2" />
@@ -273,13 +273,8 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                 </div>
                 <div className="text-center">
                   <Thermometer className="h-6 w-6 text-red-500 mx-auto mb-2" />
-                  <p className="text-lg font-semibold">{weatherData.feels_like || weatherData.temperature}°C</p>
-                  <p className="text-sm text-muted-foreground">Feels like</p>
-                </div>
-                <div className="text-center">
-                  <Droplets className="h-6 w-6 text-blue-600 mx-auto mb-2" />
-                  <p className="text-lg font-semibold">{weatherData.rain_chance || '0'}%</p>
-                  <p className="text-sm text-muted-foreground">Rain chance</p>
+                  <p className="text-lg font-semibold">{weatherData.temperature || '25'}°C</p>
+                  <p className="text-sm text-muted-foreground">Temp</p>
                 </div>
               </div>
             ) : (
