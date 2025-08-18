@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -44,6 +44,9 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
   const [weatherData, setWeatherData] = useState<any>(null)
   const [weatherLoading, setWeatherLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("recommendations")
+  const [showCamera, setShowCamera] = useState(false)
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   // Function to fetch weather data
   const fetchWeatherData = async (location: string) => {
@@ -117,36 +120,49 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
     }
   }
 
+  // Open camera and show preview
   const handleTakePhoto = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment" },
       })
-
-      const video = document.createElement("video")
-      video.srcObject = stream
-      video.play()
-
-      const canvas = document.createElement("canvas")
-      const context = canvas.getContext("2d")
-
-      video.onloadedmetadata = () => {
-        canvas.width = video.videoWidth
-        canvas.height = video.videoHeight
-
-        setTimeout(() => {
-          if (context) {
-            context.drawImage(video, 0, 0)
-            const imageDataUrl = canvas.toDataURL("image/jpeg")
-            setUploadedImage(imageDataUrl)
-          }
-
-          stream.getTracks().forEach((track) => track.stop())
-        }, 3000)
-      }
+      setCameraStream(stream)
+      setShowCamera(true)
     } catch (error) {
       console.error("Error accessing camera:", error)
       document.getElementById("image-upload")?.click()
+    }
+  }
+
+  // Attach stream to video element
+  useEffect(() => {
+    if (showCamera && videoRef.current && cameraStream) {
+      videoRef.current.srcObject = cameraStream
+      videoRef.current.play()
+    }
+    return () => {
+      // Stop camera when closing preview
+      if (!showCamera && cameraStream) {
+        cameraStream.getTracks().forEach((track) => track.stop())
+        setCameraStream(null)
+      }
+    }
+  }, [showCamera, cameraStream])
+
+  // Capture image from video
+  const handleCapture = () => {
+    if (videoRef.current) {
+      const video = videoRef.current
+      const canvas = document.createElement("canvas")
+      canvas.width = video.videoWidth
+      canvas.height = video.videoHeight
+      const context = canvas.getContext("2d")
+      if (context) {
+        context.drawImage(video, 0, 0, canvas.width, canvas.height)
+        const imageDataUrl = canvas.toDataURL("image/jpeg")
+        setUploadedImage(imageDataUrl)
+        setShowCamera(false)
+      }
     }
   }
 
@@ -704,7 +720,26 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="border-2 border-dashed border-accent/20 rounded-lg p-8 text-center">
-                    {uploadedImage ? (
+                    {showCamera ? (
+                      <div className="space-y-4">
+                        <video
+                          ref={videoRef}
+                          className="mx-auto rounded-lg max-h-64"
+                          autoPlay
+                          playsInline
+                          style={{ width: "100%", maxWidth: 400, background: "#000" }}
+                        />
+                        <div className="flex justify-center gap-2">
+                          <Button onClick={handleCapture}>
+                            <Camera className="mr-2 h-4 w-4" />
+                            Capture
+                          </Button>
+                          <Button variant="outline" onClick={() => setShowCamera(false)}>
+                            Cancel
+                          </Button>
+                        </div>
+                      </div>
+                    ) : uploadedImage ? (
                       <div className="space-y-4">
                         <img
                           src={uploadedImage || "/placeholder.svg"}
