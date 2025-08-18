@@ -84,7 +84,7 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   asChild
-                  className="text-base sm:text-lg w-52 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
+                  className="text-base sm:text-lg sm:w-52 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
                 >
                   <Link href="/register">
                     Get Started
@@ -346,7 +346,7 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   asChild
-                  className="text-base sm:text-lg w-52 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
+                  className="text-base sm:text-lg sm:w-52 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold h-12 sm:h-auto"
                 >
                   <Link href="/register">
                     Start Now
