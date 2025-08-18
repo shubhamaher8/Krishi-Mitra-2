@@ -42,8 +42,9 @@ export default function LoginPage() {
       return
     }
 
-    // Redirect to dashboard
+    // Redirect to dashboard and refresh the page
     router.push("/dashboard")
+    router.refresh()
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
