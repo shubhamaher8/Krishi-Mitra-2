@@ -319,7 +319,7 @@ export default function AboutPage() {
                     <CardDescription>Advanced algorithms that learn from vast agricultural datasets</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm text-muted-foreground space-y-2">
+                    <ul className="text-sm text-muted-foreground space-y-2 text-center">
                       <li>• ML Analysis</li>
                       <li>• Predictive modeling</li>
                       <li>• Pattern recognition</li>
@@ -337,7 +337,7 @@ export default function AboutPage() {
                     <CardDescription>Comprehensive analysis of weather, soil, and market data</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm text-muted-foreground space-y-2">
+                    <ul className="text-sm text-muted-foreground space-y-2 text-center">
                       <li>• Real-time data processing</li>
                       <li>• Statistical modeling</li>
                       <li>• Trend analysis</li>
@@ -355,7 +355,7 @@ export default function AboutPage() {
                     <CardDescription>Image recognition for disease detection and crop monitoring</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm text-muted-foreground space-y-2">
+                    <ul className="text-sm text-muted-foreground space-y-2 text-center">
                       <li>• Image classification</li>
                       <li>• Disease identification</li>
                       <li>• Crop health assessment</li>
