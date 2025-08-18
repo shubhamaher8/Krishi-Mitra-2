@@ -24,36 +24,36 @@ import {
 export default function AboutPage() {
   const teamMembers = [
     {
-      name: "Dr. Rajesh Kumar",
+      name: "Shubham Aher",
       role: "CEO & Co-founder",
-      expertise: "Agricultural Science",
-      image: "/professional-indian-man-suit.png",
+      expertise: "Web Development",
+      image: "/Shubham.png",
     },
     {
-      name: "Priya Sharma",
+      name: "Dhananjay Chitale",
       role: "CTO & Co-founder",
-      expertise: "AI & Machine Learning",
-      image: "/professional-indian-woman-tech.png",
+      expertise: "Head of Technology",
+      image: "/Dhananjay.png",
     },
     {
-      name: "Dr. Amit Patel",
-      role: "Head of Research",
-      expertise: "Crop Science",
-      image: "/placeholder-qcqf0.png",
+      name: "Shravan Dhage",
+      role: "CFO & Co-founder",
+      expertise: "Research Analyst",
+      image: "/Shravan.png",
     },
     {
-      name: "Neha Gupta",
-      role: "Product Manager",
-      expertise: "User Experience",
-      image: "/professional-indian-woman-product-manager.png",
+      name: "Shreenand Bandre",
+      role: "CTO & Co-founder",
+      expertise: "AI and Machine Learning",
+      image: "/placeholder-user.png",
     },
   ]
 
   const achievements = [
-    { number: "10,000+", label: "Active Farmers" },
-    { number: "95%", label: "Accuracy Rate" },
-    { number: "50+", label: "Crop Types" },
-    { number: "15", label: "States Covered" },
+    { number: "100+", label: "Active Farmers" },
+    { number: "90%", label: "Accuracy Rate" },
+    { number: "40+", label: "Crop Types" },
+    { number: "10", label: "States Covered" },
   ]
 
   const values = [
@@ -188,7 +188,7 @@ export default function AboutPage() {
                     </div>
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
-                      <span>Promote sustainable farming practices</span>
+                      <span>Predict future crop prices</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="h-5 w-5 text-accent flex-shrink-0" />
@@ -197,10 +197,10 @@ export default function AboutPage() {
                   </div>
                 </div>
 
-                <div className="animate-fade-in-up">
+                <div className="animate-fade-in-up mt-20">
                   <div className="relative">
                     <img
-                      src="/modern-tech-farm.png"
+                      src="/farmer.png"
                       alt="Modern farming with technology"
                       className="rounded-lg shadow-lg"
                     />
@@ -275,7 +275,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
               {teamMembers.map((member, index) => (
                 <Card
                   key={index}
@@ -320,10 +320,10 @@ export default function AboutPage() {
                   </CardHeader>
                   <CardContent>
                     <ul className="text-sm text-muted-foreground space-y-2">
-                      <li>• Deep neural networks</li>
+                      <li>• ML Analysis</li>
                       <li>• Predictive modeling</li>
                       <li>• Pattern recognition</li>
-                      <li>• Continuous learning</li>
+                      <li>• AI Enabled</li>
                     </ul>
                   </CardContent>
                 </Card>
@@ -369,7 +369,7 @@ export default function AboutPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20">
+        <section className="py-20 bg-gradient-to-r from-green-50 to-green-100">
           <div className="container px-4">
             <div className="max-w-4xl mx-auto text-center animate-fade-in-up">
               <h2 className="text-3xl lg:text-4xl font-bold mb-6">Ready to Join Our Mission?</h2>
@@ -377,25 +377,6 @@ export default function AboutPage() {
                 Be part of the agricultural revolution. Start using KrishiMitra 2.0 today and experience the future of
                 farming.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  asChild
-                  className="text-lg px-8 py-4 bg-gradient-to-r from-green-500 to-white hover:from-green-600 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold"
-                >
-                  <Link href="/register">
-                    Get Started Today
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button
-                  size="lg"
-                  asChild
-                  className="text-lg px-8 py-4 bg-gradient-to-r from-green-400 to-white hover:from-green-500 hover:to-green-50 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 text-black font-semibold"
-                >
-                  <Link href="/contact">Contact Our Team</Link>
-                </Button>
-              </div>
             </div>
           </div>
         </section>
