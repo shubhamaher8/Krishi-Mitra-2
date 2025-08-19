@@ -37,6 +37,15 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 
+import Crop_Recommendation from "@/components/get-recommendations"
+
+import DiseaseDetection from "@/components/disease-detection"
+
+import RecentActivity from "@/components/Recents";
+import WelcomeSection from "@/components/welcomeSection";
+
+import PriceForecastTab from "@/components/pricePrediction";
+
 function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile: any }) {
   const [selectedLocation, setSelectedLocation] = useState("")
   const [selectedCrop, setSelectedCrop] = useState("")
@@ -429,443 +438,27 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
 
           {/* Crop Recommendations Tab */}
           <TabsContent value="recommendations" className="space-y-6">
-            <div className="grid lg:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Get Crop Recommendations</CardTitle>
-                  <CardDescription>Enter your farm details to get AI-powered crop suggestions</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="nitrogen">Nitrogen (N)</Label>
-                    <input
-                      type="number"
-                      id="nitrogen"
-                      placeholder="Enter Nitrogen (N)"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="phosphorus">Phosphorus (P)</Label>
-                    <input
-                      type="number"
-                      id="phosphorus"
-                      placeholder="Enter Phosphorus (P)"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="potassium">Potassium (K)</Label>
-                    <input
-                      type="number"
-                      id="potassium"
-                      placeholder="Enter Potassium (K)"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="temperature">Temperature (°C)</Label>
-                    <input
-                      type="number"
-                      id="temperature"
-                      placeholder="Enter Temperature (°C)"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="humidity">Humidity (%)</Label>
-                    <input
-                      type="number"
-                      id="humidity"
-                      placeholder="Enter Humidity (%)"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ph">pH</Label>
-                    <input
-                      type="number"
-                      id="ph"
-                      placeholder="Enter pH"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="rainfall">Rainfall (mm)</Label>
-                    <input
-                      type="number"
-                      id="rainfall"
-                      placeholder="Enter Rainfall (mm)"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    />
-                  </div>
-                  <Button className="w-full">
-                    <Brain className="mr-2 h-4 w-4" />
-                    Get Recommendations
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recommended Crops</CardTitle>
-                  <CardDescription>Based on your current conditions</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 bg-accent/10 rounded-lg border border-accent/20">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
-                          <Leaf className="h-5 w-5 text-accent" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Wheat (HD-2967)</h3>
-                          <p className="text-sm text-muted-foreground">Winter crop</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Badge variant="secondary" className="bg-accent/20 text-accent">
-                          95% Match
-                        </Badge>
-                        <p className="text-sm text-muted-foreground mt-1">₹45,000/acre</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                          <Leaf className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Mustard</h3>
-                          <p className="text-sm text-muted-foreground">Oil seed</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Badge variant="outline">88% Match</Badge>
-                        <p className="text-sm text-muted-foreground mt-1">₹32,000/acre</p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                          <Leaf className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Barley</h3>
-                          <p className="text-sm text-muted-foreground">Cereal grain</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Badge variant="outline">82% Match</Badge>
-                        <p className="text-sm text-muted-foreground mt-1">₹28,000/acre</p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
+            <div className="grid lg:grid-cols-1">
+              <Card> 
+               <Crop_Recommendation />
               </Card>
             </div>
           </TabsContent>
 
           {/* Price Predictions Tab */}
           <TabsContent value="predictions" className="space-y-6">
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-1">
               <Card>
-                <CardHeader>
-                  <CardTitle>Price Forecast</CardTitle>
-                  <CardDescription>Select a crop to view price predictions</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="crop">Select Crop</Label>
-                    <Select onValueChange={setSelectedCrop}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose crop for prediction" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="wheat">Wheat</SelectItem>
-                        <SelectItem value="rice">Rice</SelectItem>
-                        <SelectItem value="corn">Corn</SelectItem>
-                        <SelectItem value="cotton">Cotton</SelectItem>
-                        <SelectItem value="sugarcane">Sugarcane</SelectItem>
-                        <SelectItem value="jowar">Jowar</SelectItem>
-                        <SelectItem value="bajra">Bajra</SelectItem>
-                        <SelectItem value="tur">Tur</SelectItem>
-                        <SelectItem value="moong">Moong</SelectItem>
-                        <SelectItem value="urad">Urad</SelectItem>
-                        <SelectItem value="soyabean">Soyabean</SelectItem>
-                        <SelectItem value="groundnut">Groundnut</SelectItem>
-                        <SelectItem value="sunflower">Sunflower</SelectItem>
-                        <SelectItem value="onion">Onion</SelectItem>
-                        <SelectItem value="potato">Potato</SelectItem>
-                        <SelectItem value="tomato">Tomato</SelectItem>
-                        <SelectItem value="chillies">Chillies</SelectItem>
-                        <SelectItem value="banana">Banana</SelectItem>
-                        <SelectItem value="grapes">Grapes</SelectItem>
-                        <SelectItem value="pomegranate">Pomegranate</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="district">District</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select District"/>
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="ahmednagar">Ahmednagar</SelectItem>
-                        <SelectItem value="akola">Akola</SelectItem>
-                        <SelectItem value="amravati">Amravati</SelectItem>
-                        <SelectItem value="aurangabad">Aurangabad</SelectItem>
-                        <SelectItem value="beed">Beed</SelectItem>
-                        <SelectItem value="bhandara">Bhandara</SelectItem>
-                        <SelectItem value="buldhana">Buldhana</SelectItem>
-                        <SelectItem value="chandrapur">Chandrapur</SelectItem>
-                        <SelectItem value="dhule">Dhule</SelectItem>
-                        <SelectItem value="gadchiroli">Gadchiroli</SelectItem>
-                        <SelectItem value="gondia">Gondia</SelectItem>
-                        <SelectItem value="hingoli">Hingoli</SelectItem>
-                        <SelectItem value="jalgaon">Jalgaon</SelectItem>
-                        <SelectItem value="jalna">Jalna</SelectItem>
-                        <SelectItem value="kolhapur">Kolhapur</SelectItem>
-                        <SelectItem value="latur">Latur</SelectItem>
-                        <SelectItem value="mumbai city">Mumbai City</SelectItem>
-                        <SelectItem value="mumbai suburban">Mumbai Suburban</SelectItem>
-                        <SelectItem value="nagpur">Nagpur</SelectItem>
-                        <SelectItem value="nanded">Nanded</SelectItem>
-                        <SelectItem value="nandurbar">Nandurbar</SelectItem>
-                        <SelectItem value="nashik">Nashik</SelectItem>
-                        <SelectItem value="osmanabad">Osmanabad</SelectItem>
-                        <SelectItem value="parbhani">Parbhani</SelectItem>
-                        <SelectItem value="pune">Pune</SelectItem>
-                        <SelectItem value="raigad">Raigad</SelectItem>
-                        <SelectItem value="ratnagiri">Ratnagiri</SelectItem>
-                        <SelectItem value="sangli">Sangli</SelectItem>
-                        <SelectItem value="satara">Satara</SelectItem>
-                        <SelectItem value="sindhudurg">Sindhudurg</SelectItem>
-                        <SelectItem value="solapur">Solapur</SelectItem>
-                        <SelectItem value="thane">Thane</SelectItem>
-                        <SelectItem value="wardha">Wardha</SelectItem>
-                        <SelectItem value="washim">Washim</SelectItem>
-                        <SelectItem value="yavatmal">Yavatmal</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button className="w-full">
-                    <TrendingUp className="mr-2 h-4 w-4" />
-                    Generate Forecast
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Wheat Price Trend</CardTitle>
-                  <CardDescription>6-month price forecast</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-4 bg-accent/10 rounded-lg">
-                        <p className="text-sm text-muted-foreground">Current Price</p>
-                        <p className="text-2xl font-bold text-accent">₹2,450</p>
-                        <p className="text-xs text-muted-foreground">per quintal</p>
-                      </div>
-                      <div className="text-center p-4 bg-muted/50 rounded-lg">
-                        <p className="text-sm text-muted-foreground">Predicted (3M)</p>
-                        <p className="text-2xl font-bold">₹2,680</p>
-                        <p className="text-xs text-green-600">+9.4% ↗</p>
-                      </div>
-                    </div>
-
-                    <div className="h-48 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <BarChart3 className="h-12 w-12 text-accent mx-auto mb-2" />
-                        <p className="text-sm text-muted-foreground">Interactive Price Chart</p>
-                        <p className="text-xs text-muted-foreground mt-1">Historical & Predicted Data</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span>Market Confidence</span>
-                        <span className="text-accent font-medium">High (85%)</span>
-                      </div>
-                      <Progress value={85} className="h-2" />
-                    </div>
-
-                    <div className="space-y-2">
-                      <h4 className="font-medium">Key Factors:</h4>
-                      <ul className="text-sm text-muted-foreground space-y-1">
-                        <li>• Favorable weather conditions</li>
-                        <li>• Increased export demand</li>
-                        <li>• Government support policies</li>
-                        <li>• Seasonal price patterns</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
+                <PriceForecastTab />
               </Card>
             </div>
           </TabsContent>
 
           {/* Disease Detection Tab */}
           <TabsContent value="detection" className="space-y-6">
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid lg:grid-cols-1">
               <Card>
-                <CardHeader>
-                  <CardTitle>Upload Crop Image</CardTitle>
-                  <CardDescription>Take or upload a photo of your crop for AI analysis</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="border-2 border-dashed border-accent/20 rounded-lg p-8 text-center">
-                    {showCamera ? (
-                      <div className="space-y-4">
-                        <video
-                          ref={videoRef}
-                          className="mx-auto rounded-lg max-h-64"
-                          autoPlay
-                          playsInline
-                          style={{ width: "100%", maxWidth: 400, background: "#000" }}
-                        />
-                        <div className="flex justify-center gap-2">
-                          <Button onClick={handleCapture}>
-                            <Camera className="mr-2 h-4 w-4" />
-                            Capture
-                          </Button>
-                          <Button variant="outline" onClick={() => setShowCamera(false)}>
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    ) : uploadedImage ? (
-                      <div className="space-y-4">
-                        <img
-                          src={uploadedImage || "/placeholder.svg"}
-                          alt="Uploaded crop"
-                          className="max-h-48 mx-auto rounded-lg"
-                        />
-                        <Button variant="outline" onClick={() => setUploadedImage(null)}>
-                          Upload Different Image
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        <Camera className="h-12 w-12 text-accent mx-auto" />
-                        <div>
-                          <p className="text-sm font-medium">Upload crop image</p>
-                          <p className="text-xs text-muted-foreground">Supports JPG, PNG up to 10MB</p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-2 justify-center">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleTakePhoto}
-                            className="hover:bg-black hover:text-white hover:border-black transition-all duration-300 bg-transparent"
-                          >
-                            <Camera className="mr-2 h-4 w-4" />
-                            Take Photo
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                            className="hover:bg-black hover:text-white hover:border-black transition-all duration-300 bg-transparent"
-                          >
-                            <label htmlFor="image-upload" className="cursor-pointer">
-                              <Upload className="mr-2 h-4 w-4" />
-                              Upload Image
-                            </label>
-                          </Button>
-                        </div>
-                        <input
-                          id="image-upload"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {uploadedImage && (
-                    <Button className="w-full">
-                      <Shield className="mr-2 h-4 w-4" />
-                      Analyze for Diseases
-                    </Button>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Disease Analysis Results</CardTitle>
-                  <CardDescription>AI-powered crop health assessment</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-destructive/10 rounded-lg border border-destructive/20">
-                      <div className="flex items-center space-x-3">
-                        <AlertTriangle className="h-5 w-5 text-destructive" />
-                        <div>
-                          <h4 className="font-medium">Leaf Blight</h4>
-                          <p className="text-sm text-muted-foreground">Fungal infection</p>
-                        </div>
-                      </div>
-                      <Badge variant="destructive">High Risk</Badge>
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                      <div className="flex items-center space-x-3">
-                        <Clock className="h-5 w-5 text-yellow-600" />
-                        <div>
-                          <h4 className="font-medium">Powdery Mildew</h4>
-                          <p className="text-sm text-muted-foreground">Early stage</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-yellow-100 text-yellow-800">Medium Risk</Badge>
-                    </div>
-
-                    <div className="flex items-center justify-between p-3 bg-accent/10 rounded-lg border border-accent/20">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="h-5 w-5 text-accent" />
-                        <div>
-                          <h4 className="font-medium">Root Health</h4>
-                          <p className="text-sm text-muted-foreground">No issues detected</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-accent/20 text-accent">Healthy</Badge>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 pt-4 border-t">
-                    <h4 className="font-medium">Treatment Recommendations:</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Apply copper-based fungicide immediately</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Improve air circulation around plants</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Reduce watering frequency</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Monitor weekly for progress</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Get Expert Consultation
-                  </Button>
-                </CardContent>
+               <DiseaseDetection />
               </Card>
             </div>
           </TabsContent>
@@ -873,46 +466,7 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
 
         {/* Recent Activity */}
         <Card className="mt-8 animate-fade-in-up">
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Your latest farming insights and actions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4 p-3 bg-muted/50 rounded-lg">
-                <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
-                  <Brain className="h-5 w-5 text-accent" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">New crop recommendations available</p>
-                  <p className="text-sm text-muted-foreground">Based on updated weather data</p>
-                </div>
-                <span className="text-xs text-muted-foreground">2 hours ago</span>
-              </div>
-
-              <div className="flex items-center space-x-4 p-3 bg-muted/50 rounded-lg">
-                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <TrendingUp className="h-5 w-5 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">Wheat prices expected to rise</p>
-                  <p className="text-sm text-muted-foreground">+12% increase predicted for next month</p>
-                </div>
-                <span className="text-xs text-muted-foreground">1 day ago</span>
-              </div>
-
-              <div className="flex items-center space-x-4 p-3 bg-muted/50 rounded-lg">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <Shield className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">Disease scan completed</p>
-                  <p className="text-sm text-muted-foreground">No major issues detected in Field A</p>
-                </div>
-                <span className="text-xs text-muted-foreground">3 days ago</span>
-              </div>
-            </div>
-          </CardContent>
+          <RecentActivity />
         </Card>
       </div>
     </main>

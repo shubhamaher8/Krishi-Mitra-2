@@ -53,7 +53,7 @@ export function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
-                  href="/explore"
+                  href="/dashboard?tab=crop-recommendations"
                   className="text-muted-foreground hover:text-accent transition-colors cursor-pointer"
                 >
                   Crop Recommendations
@@ -61,7 +61,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/explore"
+                  href="/dashboard?tab=price-predictions"
                   className="text-muted-foreground hover:text-accent transition-colors cursor-pointer"
                 >
                   Price Predictions
@@ -69,10 +69,18 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/explore"
+                  href="/dashboard?tab=disease-detection"
                   className="text-muted-foreground hover:text-accent transition-colors cursor-pointer"
                 >
                   Disease Detection
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/explore"
+                  className="text-muted-foreground hover:text-accent transition-colors cursor-pointer"
+                >
+                  Weather Analysis
                 </Link>
               </li>
             </ul>
@@ -85,27 +93,27 @@ export function Footer() {
               <li className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-muted-foreground" />
                 <a
-                  href="mailto:yodha925@gmail.com"
+                  href="mailto:support@krishimitra.com"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
-                  yodha925@gmail.com
+                  support@krishimitra.com
                 </a>
               </li>
               <li className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
-                <a href="tel:+918208756254" className="text-muted-foreground hover:text-accent transition-colors">
-                  +91 82087 56254
+                <a href="tel:+919876543210" className="text-muted-foreground hover:text-accent transition-colors">
+                  +91 98765 43210
                 </a>
               </li>
               <li className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <a
-                  href="https://maps.google.com/?q=Pune,+India"
+                  href="https://maps.google.com/?q=New+Delhi,+India"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
-                  Pune, India
+                  New Delhi, India
                 </a>
               </li>
             </ul>
@@ -113,7 +121,7 @@ export function Footer() {
         </div>
 
         <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 KrishiMitra 2.0. All rights reserved.</p>
+          <p>&copy; 2024 KrishiMitra 2.0. All rights reserved. Built with AI for farmers.</p>
         </div>
       </div>
     </footer>

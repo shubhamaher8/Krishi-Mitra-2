@@ -1,45 +1,46 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { NextResponse } from "next/server";
+const URL = process.env.NEXT_PUBLIC_API_URL
 
-export async function POST(request: NextRequest) {
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json()
-    const { cropType, location, timeframe, quantity } = body
+    const body = await req.json();
+    const { type, crop, district, state, date } = body;
 
-    // This endpoint will connect to your ML model
+    let backendUrl = "";
+    if (type === "daily") backendUrl = `${URL}/forecast/daily`;
+    else if (type === "weekly") backendUrl = `${URL}/forecast/weekly`;
+    else return NextResponse.json({ success: false, error: "Invalid type" }, { status: 400 });
 
-    const mockPredictions = {
-      success: true,
-      data: {
-        currentPrice: 2500,
-        predictedPrices: [
-          { month: "Jan 2024", price: 2650, confidence: 92 },
-          { month: "Feb 2024", price: 2720, confidence: 89 },
-          { month: "Mar 2024", price: 2800, confidence: 85 },
-          { month: "Apr 2024", price: 2900, confidence: 82 },
-        ],
-        marketTrends: {
-          trend: "Upward",
-          volatility: "Low",
-          seasonalFactors: ["Harvest season", "Export demand"],
-        },
-        recommendations: [
-          "Consider selling in March for optimal prices",
-          "Monitor export market conditions",
-          "Store crop if possible for better rates",
-        ],
-      },
+    // Forecast data
+    const response = await fetch(backendUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ crop, state, district, date }),
+    });
+
+    if (!response.ok) {
+      return NextResponse.json({ success: false, error: "Backend request failed" }, { status: response.status });
     }
 
-    // TODO: Replace with actual ML model API call
-    // const mlResponse = await fetch('YOUR_PRICE_PREDICTION_ENDPOINT', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ cropType, location, timeframe, quantity })
-    // })
-    // const predictions = await mlResponse.json()
+    const data = await response.json();
 
-    return NextResponse.json(mockPredictions)
-  } catch (error) {
-    return NextResponse.json({ success: false, error: "Failed to get price predictions" }, { status: 500 })
+    // Fetch plot URL
+    const plotResponse = await fetch(`${URL}/plot`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ crop, state, district }),
+    });
+
+    let plotUrl: string | null = null;
+    if (plotResponse.ok) {
+      const plotData = await plotResponse.json();
+      plotUrl = plotData.success ? plotData.url : null;
+    }
+
+    return NextResponse.json({ ...data, plotUrl });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ success: false, error: "Something went wrong" }, { status: 500 });
   }
 }
