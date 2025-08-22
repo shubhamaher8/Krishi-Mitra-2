@@ -3,54 +3,94 @@ import { type NextRequest, NextResponse } from "next/server"
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { soilType, climate, location, season, farmSize } = body
+    const { nitrogen, phosphorus, potassium, temperature, humidity, ph, rainfall } = body
 
-    // This endpoint will connect to your ML model
-    // For now, returning mock data structure
-
-    const mockRecommendations = {
-      success: true,
-      data: {
-        recommendedCrops: [
-          {
-            name: "Rice",
-            suitability: 95,
-            expectedYield: "4.5 tons/hectare",
-            profitability: "High",
-            reasons: ["Suitable soil pH", "Adequate rainfall", "Market demand"],
-          },
-          {
-            name: "Wheat",
-            suitability: 87,
-            expectedYield: "3.2 tons/hectare",
-            profitability: "Medium",
-            reasons: ["Good soil nutrients", "Favorable temperature"],
-          },
-        ],
-        soilAnalysis: {
-          pH: 6.8,
-          nitrogen: "Medium",
-          phosphorus: "High",
-          potassium: "Medium",
-        },
-        weatherForecast: {
-          rainfall: "Moderate",
-          temperature: "25-30°C",
-          humidity: "65%",
-        },
-      },
+    // Validate required fields
+    if (!nitrogen || !phosphorus || !potassium || !temperature || !humidity || !ph || !rainfall) {
+      return NextResponse.json(
+        { success: false, error: "All soil and weather parameters are required" },
+        { status: 400 }
+      )
     }
 
-    // TODO: Replace with actual ML model API call
-    // const mlResponse = await fetch('YOUR_ML_MODEL_ENDPOINT', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ soilType, climate, location, season, farmSize })
-    // })
-    // const recommendations = await mlResponse.json()
+    // Prepare prompt for Mistral AI
+    const prompt = `You are an expert agricultural scientist. Based on the following soil and weather conditions, provide detailed crop recommendations for Indian farming:
 
-    return NextResponse.json(mockRecommendations)
+Soil Parameters:
+- Nitrogen (N): ${nitrogen} mg/kg
+- Phosphorus (P): ${phosphorus} mg/kg  
+- Potassium (K): ${potassium} mg/kg
+- pH: ${ph}
+
+Weather Conditions:
+- Temperature: ${temperature}°C
+- Humidity: ${humidity}%
+- Rainfall: ${rainfall} mm
+
+Please provide:
+1. Top 3-4 recommended crops with their suitability percentage
+2. Expected yield for each crop
+3. Profitability assessment (High/Medium/Low)
+4. Specific reasons for each recommendation
+5. Any additional farming advice
+
+Format your response in a clear, structured manner suitable for farmers. Focus on crops commonly grown in India.`
+
+    // Call OpenRouter API with Mistral AI
+    const openRouterResponse = await fetch(process.env.OPENROUTER_BASE_URL + '/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://your-domain.com', // Replace with your actual domain
+        'X-Title': 'Crop Recommendation System'
+      },
+      body: JSON.stringify({
+        model: 'mistralai/mistral-small-3.2-24b-instruct:free',
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ],
+        max_tokens: 1000,
+        temperature: 0.7
+      })
+    })
+
+    if (!openRouterResponse.ok) {
+      const errorData = await openRouterResponse.text()
+      console.error('OpenRouter API error:', errorData)
+      return NextResponse.json(
+        { success: false, error: "Failed to get AI recommendations" },
+        { status: 500 }
+      )
+    }
+
+    const aiResponse = await openRouterResponse.json()
+    const aiRecommendations = aiResponse.choices?.[0]?.message?.content || "No recommendations available"
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        aiRecommendations,
+        inputParameters: {
+          nitrogen,
+          phosphorus,
+          potassium,
+          temperature,
+          humidity,
+          ph,
+          rainfall
+        }
+      }
+    })
+
   } catch (error) {
-    return NextResponse.json({ success: false, error: "Failed to get crop recommendations" }, { status: 500 })
+    console.error('Crop recommendations error:', error)
+    return NextResponse.json(
+      { success: false, error: "Failed to get crop recommendations" },
+      { status: 500 }
+    )
   }
 }

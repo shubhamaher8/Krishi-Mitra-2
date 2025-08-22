@@ -47,6 +47,195 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
   const [showCamera, setShowCamera] = useState(false)
   const [cameraStream, setCameraStream] = useState<MediaStream | null>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
+  
+  // Crop recommendation states
+  const [cropFormData, setCropFormData] = useState({
+    nitrogen: '',
+    phosphorus: '',
+    potassium: '',
+    temperature: '',
+    humidity: '',
+    ph: '',
+    rainfall: ''
+  })
+  const [cropRecommendations, setCropRecommendations] = useState<string>("")
+  const [cropLoading, setCropLoading] = useState(false)
+  const [cropError, setCropError] = useState<string>("")
+  
+  // Disease detection states
+  const [diseaseAnalysis, setDiseaseAnalysis] = useState<string>("")
+  const [diseaseLoading, setDiseaseLoading] = useState(false)
+  const [diseaseError, setDiseaseError] = useState<string>("")
+  
+  // Price prediction states
+  const [pricePredictions, setPricePredictions] = useState<string>("")
+  const [priceLoading, setPriceLoading] = useState(false)
+  const [priceError, setPriceError] = useState<string>("")
+
+  // Function to handle crop recommendation form input changes
+  const handleCropInputChange = (field: string, value: string) => {
+    setCropFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  // Function to fill sample data for testing
+  const fillSampleData = () => {
+    setCropFormData({
+      nitrogen: '45',
+      phosphorus: '35',
+      potassium: '28',
+      temperature: '28',
+      humidity: '65',
+      ph: '6.8',
+      rainfall: '120'
+    })
+  }
+
+  // Function to clear form data
+  const clearFormData = () => {
+    setCropFormData({
+      nitrogen: '',
+      phosphorus: '',
+      potassium: '',
+      temperature: '',
+      humidity: '',
+      ph: '',
+      rainfall: ''
+    })
+    setCropRecommendations("")
+    setCropError("")
+  }
+
+  // Function to clear disease analysis
+  const clearDiseaseAnalysis = () => {
+    setDiseaseAnalysis("")
+    setDiseaseError("")
+    setUploadedImage(null)
+  }
+
+  // Function to clear price predictions
+  const clearPricePredictions = () => {
+    setPricePredictions("")
+    setPriceError("")
+    setSelectedCrop("")
+    setSelectedLocation("")
+  }
+
+  // Function to get price predictions from AI
+  const getPricePredictions = async () => {
+    if (!selectedCrop || !selectedLocation) {
+      setPriceError("Please select both crop and district")
+      return
+    }
+
+    setPriceLoading(true)
+    setPriceError("")
+    setPricePredictions("")
+    
+    try {
+      const response = await fetch('/api/price-predictions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          crop: selectedCrop,
+          district: selectedLocation
+        })
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setPricePredictions(data.data.pricePredictions)
+      } else {
+        setPriceError(data.error || "Failed to get price predictions")
+      }
+    } catch (error) {
+      console.error('Error getting price predictions:', error)
+      setPriceError("Network error. Please try again.")
+    } finally {
+      setPriceLoading(false)
+    }
+  }
+
+  // Function to analyze image for diseases using A4F API
+  const analyzeImageForDiseases = async () => {
+    if (!uploadedImage) {
+      setDiseaseError("Please upload or capture an image first")
+      return
+    }
+
+    setDiseaseLoading(true)
+    setDiseaseError("")
+    setDiseaseAnalysis("")
+    
+    try {
+      const response = await fetch('/api/disease-detection', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageData: uploadedImage
+        })
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setDiseaseAnalysis(data.data.diseaseAnalysis)
+      } else {
+        setDiseaseError(data.error || "Failed to analyze image")
+      }
+    } catch (error) {
+      console.error('Error analyzing image for diseases:', error)
+      setDiseaseError("Network error. Please try again.")
+    } finally {
+      setDiseaseLoading(false)
+    }
+  }
+
+  // Function to get crop recommendations from AI
+  const getCropRecommendations = async () => {
+    // Validate that all fields are filled
+    const requiredFields = ['nitrogen', 'phosphorus', 'potassium', 'temperature', 'humidity', 'ph', 'rainfall']
+    const emptyFields = requiredFields.filter(field => !cropFormData[field as keyof typeof cropFormData])
+    
+    if (emptyFields.length > 0) {
+      setCropError(`Please fill in all required fields: ${emptyFields.join(', ')}`)
+      return
+    }
+
+    setCropLoading(true)
+    setCropError("")
+    setCropRecommendations("")
+    
+    try {
+      const response = await fetch('/api/crop-recommendations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cropFormData)
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        setCropRecommendations(data.data.aiRecommendations)
+      } else {
+        setCropError(data.error || "Failed to get recommendations")
+      }
+    } catch (error) {
+      console.error('Error getting crop recommendations:', error)
+      setCropError("Network error. Please try again.")
+    } finally {
+      setCropLoading(false)
+    }
+  }
 
   // Function to fetch weather data
   const fetchWeatherData = async (location: string) => {
@@ -433,32 +622,37 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
               <Card>
                 <CardHeader>
                   <CardTitle>Get Crop Recommendations</CardTitle>
-                  <CardDescription>Enter your farm details to get AI-powered crop suggestions</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="nitrogen">Nitrogen (N)</Label>
+                    <Label htmlFor="nitrogen">Nitrogen (N) mg/kg</Label>
                     <input
                       type="number"
                       id="nitrogen"
+                      value={cropFormData.nitrogen}
+                      onChange={(e) => handleCropInputChange('nitrogen', e.target.value)}
                       placeholder="Enter Nitrogen (N)"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phosphorus">Phosphorus (P)</Label>
+                    <Label htmlFor="phosphorus">Phosphorus (P) mg/kg</Label>
                     <input
                       type="number"
                       id="phosphorus"
+                      value={cropFormData.phosphorus}
+                      onChange={(e) => handleCropInputChange('phosphorus', e.target.value)}
                       placeholder="Enter Phosphorus (P)"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="potassium">Potassium (K)</Label>
+                    <Label htmlFor="potassium">Potassium (K) mg/kg</Label>
                     <input
                       type="number"
                       id="potassium"
+                      value={cropFormData.potassium}
+                      onChange={(e) => handleCropInputChange('potassium', e.target.value)}
                       placeholder="Enter Potassium (K)"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
@@ -468,6 +662,8 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                     <input
                       type="number"
                       id="temperature"
+                      value={cropFormData.temperature}
+                      onChange={(e) => handleCropInputChange('temperature', e.target.value)}
                       placeholder="Enter Temperature (°C)"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
@@ -477,6 +673,8 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                     <input
                       type="number"
                       id="humidity"
+                      value={cropFormData.humidity}
+                      onChange={(e) => handleCropInputChange('humidity', e.target.value)}
                       placeholder="Enter Humidity (%)"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
@@ -486,7 +684,12 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                     <input
                       type="number"
                       id="ph"
+                      value={cropFormData.ph}
+                      onChange={(e) => handleCropInputChange('ph', e.target.value)}
                       placeholder="Enter pH"
+                      step="0.1"
+                      min="0"
+                      max="14"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
@@ -495,74 +698,96 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                     <input
                       type="number"
                       id="rainfall"
+                      value={cropFormData.rainfall}
+                      onChange={(e) => handleCropInputChange('rainfall', e.target.value)}
                       placeholder="Enter Rainfall (mm)"
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
-                  <Button className="w-full">
-                    <Brain className="mr-2 h-4 w-4" />
-                    Get Recommendations
+                  <Button 
+                    className="w-full" 
+                    onClick={getCropRecommendations}
+                    disabled={cropLoading}
+                  >
+                    {cropLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Getting AI Recommendations...
+                      </>
+                    ) : (
+                      <>
+                        <Brain className="mr-2 h-4 w-4" />
+                        Get AI Recommendations
+                      </>
+                    )}
                   </Button>
+                  
+                  <div className="flex gap-2 pt-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={fillSampleData}
+                      className="flex-1"
+                    >
+                      Fill Sample Data
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={clearFormData}
+                      className="flex-1"
+                    >
+                      Clear Form
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Recommended Crops</CardTitle>
-                  <CardDescription>Based on your current conditions</CardDescription>
+                  <CardTitle>AI Crop Recommendations</CardTitle>
+                  <CardDescription>AI-powered suggestions based on your input</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 bg-accent/10 rounded-lg border border-accent/20">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
-                          <Leaf className="h-5 w-5 text-accent" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Wheat (HD-2967)</h3>
-                          <p className="text-sm text-muted-foreground">Winter crop</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Badge variant="secondary" className="bg-accent/20 text-accent">
-                          95% Match
-                        </Badge>
-                        <p className="text-sm text-muted-foreground mt-1">₹45,000/acre</p>
+                  {cropError && (
+                    <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                      <p className="text-destructive text-sm">{cropError}</p>
+                    </div>
+                  )}
+                  
+                  {cropLoading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+                        <p className="text-muted-foreground">AI is analyzing your farm conditions...</p>
+                        <p className="text-xs text-muted-foreground mt-2">This may take a few moments</p>
                       </div>
                     </div>
-
-                    <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                          <Leaf className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Mustard</h3>
-                          <p className="text-sm text-muted-foreground">Oil seed</p>
+                  ) : cropRecommendations ? (
+                    <div className="space-y-4">
+                      <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
+                        <h4 className="font-semibold text-accent mb-2">AI Analysis Results:</h4>
+                        <div className="bg-white p-4 rounded border text-sm leading-relaxed">
+                          {cropRecommendations}
                         </div>
                       </div>
-                      <div className="text-right">
-                        <Badge variant="outline">88% Match</Badge>
-                        <p className="text-sm text-muted-foreground mt-1">₹32,000/acre</p>
-                      </div>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setCropRecommendations("")}
+                        className="w-full"
+                      >
+                        Clear Results
+                      </Button>
                     </div>
-
-                    <div className="flex items-center justify-between p-4 bg-muted/50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                          <Leaf className="h-5 w-5 text-muted-foreground" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">Barley</h3>
-                          <p className="text-sm text-muted-foreground">Cereal grain</p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <Badge variant="outline">82% Match</Badge>
-                        <p className="text-sm text-muted-foreground mt-1">₹28,000/acre</p>
-                      </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <Brain className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">No recommendations yet</p>
+                      <p className="text-sm text-muted-foreground">
+                        Fill in the form and click "Get AI Recommendations" to get started
+                      </p>
                     </div>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -609,7 +834,7 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="district">District</Label>
-                    <Select>
+                    <Select onValueChange={setSelectedLocation}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select District"/>
                       </SelectTrigger>
@@ -652,59 +877,80 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="w-full">
-                    <TrendingUp className="mr-2 h-4 w-4" />
-                    Generate Forecast
+                  <Button 
+                    className="w-full" 
+                    onClick={getPricePredictions}
+                    disabled={priceLoading}
+                  >
+                    {priceLoading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Generating AI Forecast...
+                      </>
+                    ) : (
+                      <>
+                        <TrendingUp className="mr-2 h-4 w-4" />
+                        Generate AI Forecast
+                      </>
+                    )}
+                  </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={clearPricePredictions}
+                    className="w-full"
+                  >
+                    Clear Form
                   </Button>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Wheat Price Trend</CardTitle>
-                  <CardDescription>6-month price forecast</CardDescription>
+                  <CardTitle>AI Price Predictions</CardTitle>
+                  <CardDescription>AI-powered market analysis using Mistral AI</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-4 bg-accent/10 rounded-lg">
-                        <p className="text-sm text-muted-foreground">Current Price</p>
-                        <p className="text-2xl font-bold text-accent">₹2,450</p>
-                        <p className="text-xs text-muted-foreground">per quintal</p>
-                      </div>
-                      <div className="text-center p-4 bg-muted/50 rounded-lg">
-                        <p className="text-sm text-muted-foreground">Predicted (3M)</p>
-                        <p className="text-2xl font-bold">₹2,680</p>
-                        <p className="text-xs text-green-600">+9.4% ↗</p>
-                      </div>
+                <CardContent className="space-y-4">
+                  {priceError && (
+                    <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                      <p className="text-destructive text-sm">{priceError}</p>
                     </div>
-
-                    <div className="h-48 bg-gradient-to-r from-accent/10 to-accent/5 rounded-lg flex items-center justify-center">
+                  )}
+                  
+                  {priceLoading ? (
+                    <div className="flex items-center justify-center py-12">
                       <div className="text-center">
-                        <BarChart3 className="h-12 w-12 text-accent mx-auto mb-2" />
-                        <p className="text-sm text-muted-foreground">Interactive Price Chart</p>
-                        <p className="text-xs text-muted-foreground mt-1">Historical & Predicted Data</p>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+                        <p className="text-muted-foreground">AI is analyzing market trends...</p>
+                        <p className="text-xs text-muted-foreground mt-2">This may take a few moments</p>
                       </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span>Market Confidence</span>
-                        <span className="text-accent font-medium">High (85%)</span>
+                  ) : pricePredictions ? (
+                    <div className="space-y-4">
+                      <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
+                        <h4 className="font-semibold text-accent mb-2">AI Market Analysis:</h4>
+                        <div className="bg-white p-4 rounded border text-sm leading-relaxed">
+                          {pricePredictions}
+                        </div>
                       </div>
-                      <Progress value={85} className="h-2" />
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setPricePredictions("")}
+                        className="w-full"
+                      >
+                        Clear Results
+                      </Button>
                     </div>
-
-                    <div className="space-y-2">
-                      <h4 className="font-medium">Key Factors:</h4>
-                      <ul className="text-sm text-muted-foreground space-y-1">
-                        <li>• Favorable weather conditions</li>
-                        <li>• Increased export demand</li>
-                        <li>• Government support policies</li>
-                        <li>• Seasonal price patterns</li>
-                      </ul>
+                  ) : (
+                    <div className="text-center py-12">
+                      <TrendingUp className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">No predictions yet</p>
+                      <p className="text-sm text-muted-foreground">
+                        Select crop and district, then click "Generate AI Forecast" to get started
+                      </p>
                     </div>
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
@@ -791,80 +1037,82 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                   </div>
 
                   {uploadedImage && (
-                    <Button className="w-full">
-                      <Shield className="mr-2 h-4 w-4" />
-                      Analyze for Diseases
-                    </Button>
+                    <div className="space-y-2">
+                      <Button 
+                        className="w-full" 
+                        onClick={analyzeImageForDiseases}
+                        disabled={diseaseLoading}
+                      >
+                        {diseaseLoading ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Analyzing Image...
+                          </>
+                        ) : (
+                          <>
+                            <Shield className="mr-2 h-4 w-4" />
+                            Analyze for Diseases
+                          </>
+                        )}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={clearDiseaseAnalysis}
+                        className="w-full"
+                      >
+                        Clear Image & Results
+                      </Button>
+                    </div>
                   )}
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Disease Analysis Results</CardTitle>
-                  <CardDescription>AI-powered crop health assessment</CardDescription>
+                  <CardTitle>AI Disease Analysis Results</CardTitle>
+                  <CardDescription>AI-powered crop health assessment using GPT-5 Nano</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-3 bg-destructive/10 rounded-lg border border-destructive/20">
-                      <div className="flex items-center space-x-3">
-                        <AlertTriangle className="h-5 w-5 text-destructive" />
-                        <div>
-                          <h4 className="font-medium">Leaf Blight</h4>
-                          <p className="text-sm text-muted-foreground">Fungal infection</p>
+                  {diseaseError && (
+                    <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-lg">
+                      <p className="text-destructive text-sm">{diseaseError}</p>
+                    </div>
+                  )}
+                  
+                  {diseaseLoading ? (
+                    <div className="flex items-center justify-center py-12">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-4"></div>
+                        <p className="text-muted-foreground">AI is analyzing your crop image...</p>
+                        <p className="text-xs text-muted-foreground mt-2">This may take a few moments</p>
+                      </div>
+                    </div>
+                  ) : diseaseAnalysis ? (
+                    <div className="space-y-4">
+                      <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
+                        <h4 className="font-semibold text-accent mb-2">AI Analysis Results:</h4>
+                        <div className="bg-white p-4 rounded border text-sm leading-relaxed">
+                          {diseaseAnalysis}
                         </div>
                       </div>
-                      <Badge variant="destructive">High Risk</Badge>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setDiseaseAnalysis("")}
+                        className="w-full"
+                      >
+                        Clear Results
+                      </Button>
                     </div>
-
-                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-                      <div className="flex items-center space-x-3">
-                        <Clock className="h-5 w-5 text-yellow-600" />
-                        <div>
-                          <h4 className="font-medium">Powdery Mildew</h4>
-                          <p className="text-sm text-muted-foreground">Early stage</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-yellow-100 text-yellow-800">Medium Risk</Badge>
+                  ) : (
+                    <div className="text-center py-12">
+                      <Shield className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
+                      <p className="text-muted-foreground mb-2">No analysis results yet</p>
+                      <p className="text-sm text-muted-foreground">
+                        Upload or capture an image and click "Analyze for Diseases" to get started
+                      </p>
                     </div>
-
-                    <div className="flex items-center justify-between p-3 bg-accent/10 rounded-lg border border-accent/20">
-                      <div className="flex items-center space-x-3">
-                        <CheckCircle className="h-5 w-5 text-accent" />
-                        <div>
-                          <h4 className="font-medium">Root Health</h4>
-                          <p className="text-sm text-muted-foreground">No issues detected</p>
-                        </div>
-                      </div>
-                      <Badge className="bg-accent/20 text-accent">Healthy</Badge>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 pt-4 border-t">
-                    <h4 className="font-medium">Treatment Recommendations:</h4>
-                    <div className="space-y-2 text-sm">
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Apply copper-based fungicide immediately</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Improve air circulation around plants</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Reduce watering frequency</p>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0" />
-                        <p>Monitor weekly for progress</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button variant="outline" className="w-full bg-transparent">
-                    Get Expert Consultation
-                  </Button>
+                  )}
                 </CardContent>
               </Card>
             </div>
