@@ -13,44 +13,49 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare prompt for Mistral AI
-    const prompt = `You are an expert agricultural economist specializing in Indian crop markets. Based on the following information, provide a detailed price prediction analysis:
+    const prompt = `You are an expert agricultural economist specializing in Indian crop markets. Based on the following information, provide a price prediction analysis:
 
 Crop: ${crop}
 District: ${district}
 
-Please provide a comprehensive analysis including:
+Provide the analysis in this specific format:
 
-1. Current market price trends for ${crop} in ${district}
-2. 3-month price forecast with percentage change
-3. 6-month price forecast with percentage change
-4. Key factors influencing price movements (weather, demand, supply, government policies, etc.)
-5. Market confidence level (High/Medium/Low) with percentage
-6. Risk factors that could affect prices
-7. Recommendations for farmers (when to sell, storage advice, etc.)
-8. Historical price patterns and seasonal trends
+Current Price: [value]
+Predicted Price: [value]
+Market Confidence: [percentage]
+Key Factors:
+• [factor 1]
+• [factor 2]
+• [factor 3]
+• [factor 4]
+Example format:
+Current Price: ₹40 - ₹50 per kg
+Predicted Price: ₹45 - ₹55 per kg (over the next 2 weeks)
+Market Confidence: 85%
+Key Factors:
+• Monsoon rains affecting supply in nearby growing regions
+• Demand from local markets and hotels
+• Transport and logistics costs
+• Prevailing wholesale market prices
 
-Format your response in clear, structured text that farmers can easily understand. Focus on practical insights and actionable advice. Include specific price ranges and percentages where possible.
-
-Keep the response comprehensive but easy to read, suitable for immediate farming decisions.`
+Keep the response easy to read, suitable for immediate farming decisions.`
 
     // Call OpenRouter API with Mistral AI
-    const openRouterResponse = await fetch(process.env.OPENROUTER_BASE_URL + '/chat/completions', {
+    const openRouterResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${process.env.A4F_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://your-domain.com', // Replace with your actual domain
-        'X-Title': 'Price Prediction System'
       },
       body: JSON.stringify({
-        model: 'mistralai/mistral-small-3.2-24b-instruct:free',
+        model: 'provider-3/gpt-5-nano',
         messages: [
           {
             role: 'user',
             content: prompt
           }
         ],
-        max_tokens: 1200,
+        max_tokens: 7200,
         temperature: 0.3
       })
     })

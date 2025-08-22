@@ -27,33 +27,31 @@ Weather Conditions:
 - Humidity: ${humidity}%
 - Rainfall: ${rainfall} mm
 
-Please provide:
-1. Top 3-4 recommended crops with their suitability percentage
-2. Expected yield for each crop
-3. Profitability assessment (High/Medium/Low)
-4. Specific reasons for each recommendation
-5. Any additional farming advice
+Please provide a list of the top 3 recommended crops. For each crop, include the following:
+Crop Name
+Short Reasons: Provide a four-word bullet point for the recommendation, summarizing why it's a good choice based on the provided data.
+Example Format:
+crop : Maize
+reason : High humidity, balanced nutrients.
 
 Format your response in a clear, structured manner suitable for farmers. Focus on crops commonly grown in India.`
 
     // Call OpenRouter API with Mistral AI
-    const openRouterResponse = await fetch(process.env.OPENROUTER_BASE_URL + '/chat/completions', {
+    const openRouterResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${process.env.A4F_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://your-domain.com', // Replace with your actual domain
-        'X-Title': 'Crop Recommendation System'
       },
       body: JSON.stringify({
-        model: 'mistralai/mistral-small-3.2-24b-instruct:free',
+        model: "provider-3/gpt-5-nano",
         messages: [
           {
             role: 'user',
             content: prompt
           }
         ],
-        max_tokens: 1000,
+        max_tokens: 9000,
         temperature: 0.7
       })
     })

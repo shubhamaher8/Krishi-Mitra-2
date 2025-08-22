@@ -80,19 +80,6 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
     }))
   }
 
-  // Function to fill sample data for testing
-  const fillSampleData = () => {
-    setCropFormData({
-      nitrogen: '45',
-      phosphorus: '35',
-      potassium: '28',
-      temperature: '28',
-      humidity: '65',
-      ph: '6.8',
-      rainfall: '120'
-    })
-  }
-
   // Function to clear form data
   const clearFormData = () => {
     setCropFormData({
@@ -437,7 +424,7 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-muted-foreground">AI Insights</p>
-                  <p className="text-2xl font-bold">12 new</p>
+                  <p className="text-2xl font-bold">3 Insights</p>
                 </div>
                 <Brain className="h-8 w-8 text-accent" />
               </div>
@@ -726,14 +713,6 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      onClick={fillSampleData}
-                      className="flex-1"
-                    >
-                      Fill Sample Data
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
                       onClick={clearFormData}
                       className="flex-1"
                     >
@@ -909,7 +888,6 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
               <Card>
                 <CardHeader>
                   <CardTitle>AI Price Predictions</CardTitle>
-                  <CardDescription>AI-powered market analysis using Mistral AI</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {priceError && (
@@ -1071,7 +1049,6 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
               <Card>
                 <CardHeader>
                   <CardTitle>AI Disease Analysis Results</CardTitle>
-                  <CardDescription>AI-powered crop health assessment using GPT-5 Nano</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {diseaseError && (
@@ -1119,49 +1096,6 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
           </TabsContent>
         </Tabs>
 
-        {/* Recent Activity */}
-        <Card className="mt-8 animate-fade-in-up">
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Your latest farming insights and actions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center space-x-4 p-3 bg-muted/50 rounded-lg">
-                <div className="w-10 h-10 bg-accent/20 rounded-full flex items-center justify-center">
-                  <Brain className="h-5 w-5 text-accent" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">New crop recommendations available</p>
-                  <p className="text-sm text-muted-foreground">Based on updated weather data</p>
-                </div>
-                <span className="text-xs text-muted-foreground">2 hours ago</span>
-              </div>
-
-              <div className="flex items-center space-x-4 p-3 bg-muted/50 rounded-lg">
-                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <TrendingUp className="h-5 w-5 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">Wheat prices expected to rise</p>
-                  <p className="text-sm text-muted-foreground">+12% increase predicted for next month</p>
-                </div>
-                <span className="text-xs text-muted-foreground">1 day ago</span>
-              </div>
-
-              <div className="flex items-center space-x-4 p-3 bg-muted/50 rounded-lg">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <Shield className="h-5 w-5 text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">Disease scan completed</p>
-                  <p className="text-sm text-muted-foreground">No major issues detected in Field A</p>
-                </div>
-                <span className="text-xs text-muted-foreground">3 days ago</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </main>
   )
