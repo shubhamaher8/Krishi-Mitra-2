@@ -28,7 +28,7 @@ const WS_URL = process.env.NEXT_PUBLIC_WS_URL
   useEffect(() => {
     const protocol = window.location.protocol === "https:" ? "wss" : "ws";
     const host = window.location.host;
-    const ws = new WebSocket("wss://your-app.onrender.com/ws/activities");
+    const ws = new WebSocket(WS_URL);
 
     ws.onmessage = (event) => {
       const newActivity: Activity = JSON.parse(event.data);
