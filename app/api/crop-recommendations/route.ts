@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const URL = process.env.NEXT_PUBLIC_API_URL
+    const URL = process.env.NEXT_PUBLIC_BACKEND_URL
     // Call your FastAPI backend
     const res = await fetch(`${URL}/predict-crop`, {
       method: "POST",

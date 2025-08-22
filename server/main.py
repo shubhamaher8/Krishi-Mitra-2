@@ -302,6 +302,14 @@ disease_info = {
 # ==========================
 app = FastAPI() 
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # ==========================
 # WebSocket for Recent Activity
 # ==========================

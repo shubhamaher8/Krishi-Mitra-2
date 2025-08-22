@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-const URL = process.env.NEXT_PUBLIC_API_URL
+const URL = process.env.NEXT_PUBLIC_BACKEND_URL
 
 
 export async function POST(req: Request) {
