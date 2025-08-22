@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
+import ReactMarkdown from "react-markdown"
 import { supabase } from "@/lib/supabaseClient"
 import {
   Brain,
@@ -747,7 +748,7 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                       <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
                         <h4 className="font-semibold text-accent mb-2">AI Analysis Results:</h4>
                         <div className="bg-white p-4 rounded border text-sm leading-relaxed">
-                          {cropRecommendations}
+                          <ReactMarkdown>{cropRecommendations}</ReactMarkdown>
                         </div>
                       </div>
                       <Button 
@@ -909,7 +910,7 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                       <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
                         <h4 className="font-semibold text-accent mb-2">AI Market Analysis:</h4>
                         <div className="bg-white p-4 rounded border text-sm leading-relaxed">
-                          {pricePredictions}
+                          <ReactMarkdown>{pricePredictions}</ReactMarkdown>
                         </div>
                       </div>
                       <Button 
@@ -1070,7 +1071,7 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                       <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
                         <h4 className="font-semibold text-accent mb-2">AI Analysis Results:</h4>
                         <div className="bg-white p-4 rounded border text-sm leading-relaxed">
-                          {diseaseAnalysis}
+                          <ReactMarkdown>{diseaseAnalysis}</ReactMarkdown>
                         </div>
                       </div>
                       <Button 

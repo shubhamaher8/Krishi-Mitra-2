@@ -13,32 +13,32 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare prompt for Mistral AI
-    const prompt = `You are an expert agricultural economist specializing in Indian crop markets. Based on the following information, provide a price prediction analysis:
+    const prompt = `You are an expert agricultural economist specializing in Indian crop markets. Based on the following information, provide a price prediction analysis in **Markdown format**:
 
 Crop: ${crop}
 District: ${district}
 
-Provide the analysis in this specific format:
+Provide the analysis in this specific format, using bold labels and bullet points for key factors:
 
-Current Price: [value]
-Predicted Price: [value]
-Market Confidence: [percentage]
-Key Factors:
+**Current Price**: [value]
+**Predicted Price**: [value]
+**Market Confidence**: [percentage]
+**Key Factors**:
 • [factor 1]
 • [factor 2]
 • [factor 3]
 • [factor 4]
 Example format:
-Current Price: ₹40 - ₹50 per kg
-Predicted Price: ₹45 - ₹55 per kg (over the next 2 weeks)
-Market Confidence: 85%
-Key Factors:
+**Current Price**: ₹40 - ₹50 per kg
+**Predicted Price**: ₹45 - ₹55 per kg (over the next 2 weeks)
+**Market Confidence**: 85%
+**Key Factors**:
 • Monsoon rains affecting supply in nearby growing regions
 • Demand from local markets and hotels
 • Transport and logistics costs
 • Prevailing wholesale market prices
 
-Keep the response easy to read, suitable for immediate farming decisions.`
+Keep the response easy to read, suitable for immediate farming decisions. Format everything in Markdown.`
 
     // Call OpenRouter API with Mistral AI
     const openRouterResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {

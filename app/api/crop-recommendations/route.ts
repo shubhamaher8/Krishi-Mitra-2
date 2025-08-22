@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare prompt for Mistral AI
-    const prompt = `You are an expert agricultural scientist. Based on the following soil and weather conditions, provide detailed crop recommendations for Indian farming:
+    const prompt = `You are an expert agricultural scientist. Based on the following soil and weather conditions, provide detailed crop recommendations for Indian farming in **Markdown format**:
 
 Soil Parameters:
 - Nitrogen (N): ${nitrogen} mg/kg
@@ -29,12 +29,13 @@ Weather Conditions:
 
 Please provide a list of the top 3 recommended crops. For each crop, include the following:
 Crop Name
-Short Reasons: Provide a four-word bullet point for the recommendation, summarizing why it's a good choice based on the provided data.
+Short Reasons: Provide a six-word bullet point for the recommendation, summarizing why it's a good choice based on the provided data.
+**Format your response in Markdown. Use headings for each crop, and bullet points for reasons.**
 Example Format:
-crop : Maize
-reason : High humidity, balanced nutrients.
+### Crop : Maize
+- reason : High humidity, balanced nutrients.
 
-Format your response in a clear, structured manner suitable for farmers. Focus on crops commonly grown in India.`
+Format your response in a clear, structured manner suitable for farmers. Focus on crops commonly grown in India. Format everything in Markdown.`
 
     // Call OpenRouter API with Mistral AI
     const openRouterResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {
