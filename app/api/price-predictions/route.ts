@@ -19,24 +19,28 @@ Crop: ${crop}
 District: ${district}
 
 Provide the analysis in this specific format, using bold labels and bullet points for key factors:
-
-**Current Price**: [value]
-**Predicted Price**: [value]
+Seprate each factor and start on the new line
+**🌱 KrishiMitra 2.0: Price Predictions**
+**Current Price**: [value in price per Quintal]
+**Predicted Price**: [value in price per Quintal]
 **Market Confidence**: [percentage]
 **Key Factors**:
 • [factor 1]
 • [factor 2]
 • [factor 3]
 • [factor 4]
+
+
 Example format:
-**Current Price**: ₹40 - ₹50 per kg
-**Predicted Price**: ₹45 - ₹55 per kg (over the next 2 weeks)
-**Market Confidence**: 85%
-**Key Factors**:
-• Monsoon rains affecting supply in nearby growing regions
-• Demand from local markets and hotels
-• Transport and logistics costs
-• Prevailing wholesale market prices
+**🌱 KrishiMitra 2.0: Price Predictions**
+**💰 Current Price**: ₹2927 per Quintal
+**📊 Predicted Price**: ₹4500 - ₹5500 per Quintal (over the next 2 weeks)
+**✅ Market Confidence**: 85%
+**🔑 Key Factors**:
+• 🌧️ Monsoon rains affecting supply in nearby growing regions
+• 🛒 Demand from local markets and hotels
+• 🚚 Transport and logistics costs
+• 📊 Prevailing wholesale market prices
 
 Keep the response easy to read, suitable for immediate farming decisions. Format everything in Markdown.`
 
@@ -48,7 +52,7 @@ Keep the response easy to read, suitable for immediate farming decisions. Format
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'provider-3/gpt-5-nano',
+        model: 'provider-6/gpt-4.1-nano',
         messages: [
           {
             role: 'user',

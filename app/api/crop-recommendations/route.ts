@@ -14,28 +14,54 @@ export async function POST(request: NextRequest) {
     }
 
     // Prepare prompt for Mistral AI
-    const prompt = `You are an expert agricultural scientist. Based on the following soil and weather conditions, provide detailed crop recommendations for Indian farming in **Markdown format**:
+    const prompt = `You are KrishiMitra 2.0, an expert agricultural scientist.  
+Based on the following soil and weather conditions, recommend the top 3 crops for Indian farmers.  
+**Important:** Suggest only crops that are **commonly grown in India**.
 
-Soil Parameters:
+### Soil Parameters:
 - Nitrogen (N): ${nitrogen} mg/kg
-- Phosphorus (P): ${phosphorus} mg/kg  
+- Phosphorus (P): ${phosphorus} mg/kg
 - Potassium (K): ${potassium} mg/kg
 - pH: ${ph}
 
-Weather Conditions:
+### Weather Conditions:
 - Temperature: ${temperature}°C
 - Humidity: ${humidity}%
 - Rainfall: ${rainfall} mm
 
-Please provide a list of the top 3 recommended crops. For each crop, include the following:
-Crop Name
-Short Reasons: Provide a six-word bullet point for the recommendation, summarizing why it's a good choice based on the provided data.
-**Format your response in Markdown. Use headings for each crop, and bullet points for reasons.**
-Example Format:
-### Crop : Maize
-- reason : High humidity, balanced nutrients.
+Response Instructions:
+1. Answer strictly in **Markdown format**.  
+2. Start with the **main headline**:  
+   **🌱 KrishiMitra 2.0: Top 3 Crop Recommendations**
+3. For each crop:  
+   - Use a **heading style** with emoji, e.g.:  
+     **🌾 Crop 1: Rice**  
+   - Add a **medium size bold “Reason” line**, e.g.:  
+     **💡 Reason** 
+   - List 3 ✅ bullet points for reasons. **Do not bold or italicize the bullets**.  
+4. Leave **one empty line** between each crop for visual separation.  
+5. Only recommend **regular Indian crops** that are widely cultivated.  
+6. Keep the language **simple, actionable, and farmer-friendly**.
 
-Format your response in a clear, structured manner suitable for farmers. Focus on crops commonly grown in India. Format everything in Markdown.`
+Example Output:
+
+**🌱 KrishiMitra 2.0: Top 3 Crop Recommendations** 
+**🌾 Crop 1: Rice**  
+**💡 Reason**  
+• ✅ Loves high humidity and rainfall  
+• ✅ Balanced NPK supports healthy growth  
+• ✅ Ideal pH 6.5 for optimal yield (leave line after this)
+**🌱 Crop 2: Soybean**
+**💡 Reason**
+• ✅ Thrives in moderate temperature (24°C)
+• ✅ Nitrogen-rich soil boosts protein content
+• ✅ Drought-tolerant, suits 138 mm rainfall (leave line after this)
+**🌽 Crop 3: Maize**
+**💡 Reason**
+• ✅ Grows fast in warm, humid conditions
+• ✅ Balanced NPK ensures strong cobs
+• ✅ pH 6.0-7.0 perfect for maize cultivation (leave line after this)
+`
 
     // Call OpenRouter API with Mistral AI
     const openRouterResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {
@@ -45,7 +71,7 @@ Format your response in a clear, structured manner suitable for farmers. Focus o
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "provider-3/gpt-5-nano",
+        model: "provider-6/gpt-4.1-nano",
         messages: [
           {
             role: 'user',
