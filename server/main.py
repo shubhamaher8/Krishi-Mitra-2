@@ -36,7 +36,6 @@ PLOT_DIR = os.getenv("PLOT_DIR", "enhanced_plots03")
 
 PORT = int(os.getenv("PORT", 8000))
 
-URL = os.getenv("BACKEND_URL", "https://krishi-mitra-2-g26v.onrender.com")
 # ==========================
 # Load Crop Recommendation Model
 # ==========================
@@ -579,11 +578,11 @@ async def get_plot(req: Request):
     if not os.path.exists(file_path):
         return JSONResponse({"success": False, "error": f"No plot found for {crop}, {state}, {district}"})
 
-    # Return both HTML content (for embedding) and URL (for new tab)
     with open(file_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    plot_url = f"${URL}/plots/{file_name}"
+    # ✅ Correct Python f-string
+    plot_url = f"https://krishi-mitra-2-g26v.onrender.com/plots/{file_name}"
 
     return {
         "success": True,
