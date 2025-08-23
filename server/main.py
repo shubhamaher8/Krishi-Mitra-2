@@ -36,6 +36,7 @@ PLOT_DIR = os.getenv("PLOT_DIR", "enhanced_plots03")
 
 PORT = int(os.getenv("PORT", 8000))
 
+URL = os.getenv("BACKEND_URL", "https://krishi-mitra-2-g26v.onrender.com")
 # ==========================
 # Load Crop Recommendation Model
 # ==========================
@@ -582,7 +583,7 @@ async def get_plot(req: Request):
     with open(file_path, "r", encoding="utf-8") as f:
         html_content = f.read()
 
-    plot_url = f"http://127.0.0.1:8000/plots/{file_name}"
+    plot_url = f"${URL}/plots/{file_name}"
 
     return {
         "success": True,
