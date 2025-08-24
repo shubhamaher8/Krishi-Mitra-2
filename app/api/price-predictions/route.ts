@@ -19,22 +19,24 @@ Crop: ${crop}
 District: ${district}
 
 Provide the analysis in this specific format, using bold labels and bullet points for key factors:
-Seprate each factor and start on the new line
 **🌱 KrishiMitra 2.0: Price Predictions**
-**Current Price**: [value in price per Quintal]
-**Predicted Price**: [value in price per Quintal]
-**Market Confidence**: [percentage]
-**Key Factors**:
+**💰 Current Price**: ₹[exact_number] per Quintal
+**📊 Predicted Price**: ₹[exact_number] per Quintal (over the next 2 months)
+**✅ Market Confidence**: [percentage]%
+**🔑 Key Factors**:
 • [factor 1]
 • [factor 2]
 • [factor 3]
 • [factor 4]
 
+IMPORTANT: Use exact numbers without commas or ranges for prices. For example:
+- Use "₹2500 per Quintal" not "₹2,500 per Quintal" or "₹2000-3000 per Quintal"
+- Use "₹1800 per Quintal" not "₹1,800 per Quintal"
 
 Example format:
 **🌱 KrishiMitra 2.0: Price Predictions**
 **💰 Current Price**: ₹2927 per Quintal
-**📊 Predicted Price**: ₹4500 - ₹5500 per Quintal (over the next 2 weeks)
+**📊 Predicted Price**: ₹4500 per Quintal (over the next 2 months)
 **✅ Market Confidence**: 85%
 **🔑 Key Factors**:
 • 🌧️ Monsoon rains affecting supply in nearby growing regions
@@ -42,7 +44,7 @@ Example format:
 • 🚚 Transport and logistics costs
 • 📊 Prevailing wholesale market prices
 
-Keep the response easy to read, suitable for immediate farming decisions. Format everything in Markdown.`
+Keep the response easy to read, suitable for immediate farming decisions. Format everything in Markdown. Ensure prices are exact numbers for accurate chart generation.`
 
     // Call OpenRouter API with Mistral AI
     const openRouterResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {

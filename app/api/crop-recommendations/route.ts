@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     // Prepare prompt for Mistral AI
     const prompt = `You are KrishiMitra 2.0, an expert agricultural scientist.  
-Based on the following soil and weather conditions, recommend the top 3 crops for Indian farmers.  
+Based on the following soil and weather conditions, recommend the top 3 crops for Indian farmers with yield probability analysis.  
 **Important:** Suggest only crops that are **commonly grown in India**.
 
 ### Soil Parameters:
@@ -32,35 +32,47 @@ Based on the following soil and weather conditions, recommend the top 3 crops fo
 Response Instructions:
 1. Answer strictly in **Markdown format**.  
 2. Start with the **main headline**:  
-   **🌱 KrishiMitra 2.0: Top 3 Crop Recommendations**
+   **🌱 KrishiMitra 2.0: Top 3 Crop Recommendations with Yield Analysis**
 3. For each crop:  
    - Use a **heading style** with emoji, e.g.:  
      **🌾 Crop 1: Rice**  
-   - Add a **medium size bold “Reason” line**, e.g.:  
+   - Add a **medium size bold "Reason" line**, e.g.:  
      **💡 Reason** 
    - List 3 ✅ bullet points for reasons. **Do not bold or italicize the bullets**.  
+   - Add Yield Probability: X% (where X is a realistic percentage based on conditions)
 4. Leave **one empty line** between each crop for visual separation.  
 5. Only recommend **regular Indian crops** that are widely cultivated.  
 6. Keep the language **simple, actionable, and farmer-friendly**.
+7. The percentages should be realistic and based on the soil/weather conditions provided. The crop with highest percentage should be marked as "Best Match".
 
 Example Output:
 
-**🌱 KrishiMitra 2.0: Top 3 Crop Recommendations** 
+**🌱 KrishiMitra 2.0: Top 3 Crop Recommendations with Yield Analysis** 
 **🌾 Crop 1: Rice**  
 **💡 Reason**  
 • ✅ Loves high humidity and rainfall  
 • ✅ Balanced NPK supports healthy growth  
-• ✅ Ideal pH 6.5 for optimal yield (leave line after this)
+• ✅ Ideal pH 6.5 for optimal yield
+• ✅ Yield Probability: 85%
+
 **🌱 Crop 2: Soybean**
 **💡 Reason**
 • ✅ Thrives in moderate temperature (24°C)
 • ✅ Nitrogen-rich soil boosts protein content
-• ✅ Drought-tolerant, suits 138 mm rainfall (leave line after this)
+• ✅ Drought-tolerant, suits 138 mm rainfall
+• ✅ Yield Probability: 72%
+
 **🌽 Crop 3: Maize**
 **💡 Reason**
 • ✅ Grows fast in warm, humid conditions
 • ✅ Balanced NPK ensures strong cobs
-• ✅ pH 6.0-7.0 perfect for maize cultivation (leave line after this)
+• ✅ pH 6.0-7.0 perfect for maize cultivation
+• ✅ Yield Probability: 68%
+
+**Yield Analysis**
+• ✅ Rice: 85% (Best Match)
+• ✅ Soybean: 72% (Good Match)  
+• ✅ Maize: 68% (Moderate Match)
 `
 
     // Call OpenRouter API with Mistral AI

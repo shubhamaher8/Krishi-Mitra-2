@@ -14,6 +14,18 @@ import { Footer } from "@/components/footer"
 import ReactMarkdown from "react-markdown"
 import { supabase } from "@/lib/supabaseClient"
 import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+} from 'chart.js'
+import { Line, Bar } from 'react-chartjs-2'
+import {
   Brain,
   TrendingUp,
   Shield,
@@ -37,6 +49,506 @@ import {
   User,
 } from "lucide-react"
 import Link from "next/link"
+
+// Register Chart.js components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+)
+
+// // Register custom plugins
+// ChartJS.register({
+//   id: 'customPriceLabels',
+//   afterDraw: function(chart: any) {
+//     const ctx = chart.ctx
+//     const meta = chart.getDatasetMeta(0)
+    
+//     if (meta.data) {
+//       meta.data.forEach((bar: any, index: number) => {
+//         const data = chart.data.datasets[0].data[index]
+//         const x = bar.x
+//         const y = bar.y - 10
+        
+//         ctx.save()
+//         ctx.textAlign = 'center'
+//         ctx.textBaseline = 'bottom'
+//         ctx.font = 'bold 12px sans-serif'
+//         ctx.fillStyle = '#374151'
+//         ctx.fillText(`₹${data.toLocaleString()}`, x, y)
+//         ctx.restore()
+//       })
+//     }
+//   }
+// })
+
+// ChartJS.register({
+//   id: 'customConnectingLine',
+//   afterDraw: function(chart: any) {
+//     const ctx = chart.ctx
+//     const meta = chart.getDatasetMeta(0)
+    
+//     if (meta.data && meta.data.length >= 2) {
+//       const bar1 = meta.data[0]
+//       const bar2 = meta.data[1]
+      
+//       ctx.save()
+//       ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)'
+//       ctx.lineWidth = 2
+//       ctx.setLineDash([5, 5])
+//       ctx.beginPath()
+//       ctx.moveTo(bar1.x, bar1.y)
+//       ctx.lineTo(bar2.x, bar2.y)
+//       ctx.stroke()
+//       ctx.restore()
+//     }
+//   }
+// })
+
+const priceLabelsPlugin = {
+  id: 'priceLabels',
+  afterDraw: function(chart: any) {
+    const ctx = chart.ctx
+    const meta = chart.getDatasetMeta(0)
+    if (meta.data) {
+      meta.data.forEach((bar: any, index: number) => {
+        const data = chart.data.datasets[0].data[index]
+        const x = bar.x
+        const y = bar.y - 10
+        ctx.save()
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'bottom'
+        ctx.font = 'bold 12px sans-serif'
+        ctx.fillStyle = '#374151'
+        ctx.fillText(`₹${data.toLocaleString()}`, x, y)
+        ctx.restore()
+      })
+    }
+  }
+}
+
+const percentLabelsPlugin = {
+  id: 'percentLabels',
+  afterDraw: function(chart: any) {
+    const ctx = chart.ctx
+    const meta = chart.getDatasetMeta(0)
+    if (meta.data) {
+      meta.data.forEach((bar: any, index: number) => {
+        const data = chart.data.datasets[0].data[index]
+        const x = bar.x
+        const y = bar.y - 10
+        ctx.save()
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'bottom'
+        ctx.font = 'bold 12px sans-serif'
+        ctx.fillStyle = '#374151'
+        ctx.fillText(`${data}%`, x, y)
+        ctx.restore()
+      })
+    }
+  }
+}
+
+const customConnectingLine = {
+  id: 'customConnectingLine',
+  afterDraw: function(chart: any) {
+    const ctx = chart.ctx
+    const meta = chart.getDatasetMeta(0)
+    if (meta.data && meta.data.length >= 2) {
+      const bar1 = meta.data[0]
+      const bar2 = meta.data[1]
+      ctx.save()
+      ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)'
+      ctx.lineWidth = 2
+      ctx.setLineDash([5, 5])
+      ctx.beginPath()
+      ctx.moveTo(bar1.x, bar1.y)
+      ctx.lineTo(bar2.x, bar2.y)
+      ctx.stroke()
+      ctx.restore()
+    }
+  }
+}
+
+// Price Chart Component
+function PriceChart({ currentPrice, predictedPrice, crop, district }: { 
+  currentPrice: number; 
+  predictedPrice: number; 
+  crop: string; 
+  district: string 
+}) {
+  const [chartLoaded, setChartLoaded] = useState(false)
+  
+  useEffect(() => {
+    // Small delay to ensure smooth animation
+    const timer = setTimeout(() => setChartLoaded(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const chartData = {
+    labels: ['Current Price', 'Predicted Price'],
+    datasets: [
+      {
+        label: 'Price per Quintal (₹)',
+        data: [currentPrice, predictedPrice],
+        backgroundColor: [
+          'rgba(34, 197, 94, 0.15)',  // Green for current
+          'rgba(59, 130, 246, 0.15)',  // Blue for predicted
+        ],
+        borderColor: [
+          'rgba(34, 197, 94, 0.8)',     // Green for current
+          'rgba(59, 130, 246, 0.8)',     // Blue for predicted
+        ],
+        borderWidth: 2,
+        borderRadius: 8,
+        borderSkipped: false,
+        barPercentage: 0.4, // Make bars thinner
+        categoryPercentage: 0.6, // Space between bars
+        hoverBackgroundColor: [
+          'rgba(34, 197, 94, 0.25)',  // Green hover
+          'rgba(59, 130, 246, 0.25)',  // Blue hover
+        ],
+        hoverBorderColor: [
+          'rgba(34, 197, 94, 1)',     // Green hover border
+          'rgba(59, 130, 246, 1)',     // Blue hover border
+        ],
+        hoverBorderWidth: 3,
+      },
+    ],
+  }
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart' as const,
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      title: {
+        display: true,
+        text: `${crop.charAt(0).toUpperCase() + crop.slice(1)} Price Forecast - ${district.charAt(0).toUpperCase() + district.slice(1)}`,
+        font: {
+          size: 14,
+          weight: 'bold' as const,
+        },
+        color: '#374151',
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: false,
+        callbacks: {
+          label: function(context: any) {
+            return `₹${context.parsed.y.toLocaleString()} per Quintal`
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.08)',
+          drawBorder: false,
+        },
+        ticks: {
+          callback: function(value: any) {
+            return '₹' + value.toLocaleString()
+          },
+          font: {
+            size: 11,
+          },
+          padding: 8,
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            weight: 'bold' as const,
+            size: 12,
+          },
+          padding: 8,
+        }
+      }
+    }
+  }
+
+  return (
+    <div className="w-full h-64">
+      {!chartLoaded ? (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto mb-2"></div>
+            <p className="text-sm text-muted-foreground">Loading chart...</p>
+          </div>
+        </div>
+      ) : (
+        <Bar data={chartData} options={chartOptions} plugins={[priceLabelsPlugin,customConnectingLine]} />
+      )}
+    </div>
+  )
+}
+
+// Crop Recommendations Chart Component
+function CropChart({ crops }: { 
+  crops: Array<{ name: string; probability: number; status: string }> 
+}) {
+  const [chartLoaded, setChartLoaded] = useState(false)
+  
+  useEffect(() => {
+    // Small delay to ensure smooth animation
+    const timer = setTimeout(() => setChartLoaded(true), 100)
+    return () => clearTimeout(timer)
+  }, [])
+
+  const chartData = {
+    labels: crops.map(crop => crop.name),
+    datasets: [
+      {
+        label: 'Yield Probability (%)',
+        data: crops.map(crop => crop.probability),
+        backgroundColor: crops.map((crop, index) => {
+          if (crop.status.includes('Best')) {
+            return 'rgba(34, 197, 94, 0.8)'  // Green for best match
+          } else if (crop.status.includes('Good')) {
+            return 'rgba(59, 130, 246, 0.8)'  // Blue for good match
+          } else {
+            return 'rgba(253, 224, 71, 0.8)'  // Gray for moderate match
+          }
+        }),
+        borderColor: crops.map((crop, index) => {
+          if (crop.status.includes('Best')) {
+            return 'rgba(34, 197, 94, 1)'  // Green for best match
+          } else if (crop.status.includes('Good')) {
+            return 'rgba(59, 130, 246, 1)'  // Blue for good match
+          } else {
+            return 'rgba(202, 138, 4, 1)'  // Gray for moderate match
+          }
+        }),
+        borderWidth: 3,
+        borderRadius: 12,
+        borderSkipped: false,
+        barPercentage: 0.5, // Make bars thinner
+        categoryPercentage: 0.7, // Space between bars
+        hoverBackgroundColor: crops.map((crop, index) => {
+          if (crop.status.includes('Best')) {
+            return 'rgba(34, 197, 94, 0.9)'  // Green hover
+          } else if (crop.status.includes('Good')) {
+            return 'rgba(59, 130, 246, 0.9)'  // Blue hover
+          } else {
+            return 'rgba(253, 224, 71, 1)'  // Gray hover
+          }
+        }),
+        hoverBorderColor: crops.map((crop, index) => {
+          if (crop.status.includes('Best')) {
+            return 'rgba(34, 197, 94, 1)'  // Green hover border
+          } else if (crop.status.includes('Good')) {
+            return 'rgba(59, 130, 246, 1)'  // Blue hover border
+          } else {
+            return 'rgba(202, 138, 4, 1)'  // Gray hover border
+          }
+        }),
+        hoverBorderWidth: 4,
+      },
+    ],
+  }
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: {
+      duration: 2000,
+      easing: 'easeInOutQuart' as const,
+    },
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.9)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        borderColor: '#e5e7eb',
+        borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: false,
+        callbacks: {
+          label: function(context: any) {
+            const crop = crops[context.dataIndex]
+            return `${crop.name}: ${crop.probability}% (${crop.status})`
+          }
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 100,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.08)',
+          drawBorder: false,
+        },
+        ticks: {
+          callback: function(value: any) {
+            return value + '%'
+          },
+          font: {
+            size: 11,
+          },
+          padding: 8,
+        }
+      },
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            weight: 'bold' as const,
+            size: 12,
+          },
+          padding: 8,
+        }
+      }
+    }
+  }
+
+  return (
+    <div className="w-full h-64">
+      {!chartLoaded ? (
+        <div className="flex items-center justify-center h-full">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent mx-auto mb-2"></div>
+            <p className="text-sm text-muted-foreground">Loading chart...</p>
+          </div>
+        </div>
+      ) : (
+        <Bar data={chartData} options={chartOptions} plugins={[percentLabelsPlugin]}/>
+      )}
+    </div>
+  )
+}
+
+// Function to extract price data from AI response
+function extractPriceData(aiResponse: string) {
+  // Try to match the new format first
+  let currentPriceMatch = aiResponse.match(/\*\*💰 Current Price\*\*: ₹(\d+(?:,\d+)*)/)
+  let predictedPriceMatch = aiResponse.match(/\*\*📊 Predicted Price\*\*: ₹(\d+(?:,\d+)*)/)
+  
+  // Fallback to old format if new format not found
+  if (!currentPriceMatch) {
+    currentPriceMatch = aiResponse.match(/\*\*Current Price\*\*: ₹(\d+(?:,\d+)*)/)
+  }
+  if (!predictedPriceMatch) {
+    predictedPriceMatch = aiResponse.match(/\*\*Predicted Price\*\*: ₹(\d+(?:,\d+)*)/)
+  }
+  
+  // Additional fallback patterns
+  if (!currentPriceMatch) {
+    currentPriceMatch = aiResponse.match(/Current Price.*?₹(\d+(?:,\d+)*)/i)
+  }
+  if (!predictedPriceMatch) {
+    predictedPriceMatch = aiResponse.match(/Predicted Price.*?₹(\d+(?:,\d+)*)/i)
+  }
+  
+  let currentPrice = 0
+  let predictedPrice = 0
+  
+  if (currentPriceMatch) {
+    currentPrice = parseInt(currentPriceMatch[1].replace(/,/g, ''))
+  }
+  
+  if (predictedPriceMatch) {
+    predictedPrice = parseInt(predictedPriceMatch[1].replace(/,/g, ''))
+  }
+  
+  return { currentPrice, predictedPrice }
+}
+
+// Function to extract yield data from crop recommendations AI response
+function extractYieldData(aiResponse: string) {
+  // Try to match the new format first (Yield Analysis section)
+  let yieldAnalysisMatch = aiResponse.match(/\*\*Yield Analysis\*\*([\s\S]*?)(?=\n\n|$)/)
+  
+  // If not found, try to extract from individual crop sections
+  if (!yieldAnalysisMatch) {
+    // Look for yield probability in each crop section
+    const cropSections = aiResponse.match(/\*\*🌾 Crop \d+: ([^*]+)\*\*[\s\S]*?Yield Probability: (\d+)%/g)
+    
+    if (cropSections && cropSections.length > 0) {
+      const crops = cropSections.map(section => {
+        const cropMatch = section.match(/\*\*🌾 Crop \d+: ([^*]+)\*\*[\s\S]*?Yield Probability: (\d+)%/)
+        if (cropMatch) {
+          const cropName = cropMatch[1].trim()
+          const probability = parseInt(cropMatch[2])
+          
+          // Determine status based on probability
+          let status = "Moderate Match"
+          if (probability >= 80) {
+            status = "Best Match"
+          } else if (probability >= 70) {
+            status = "Good Match"
+          }
+          
+          return {
+            name: cropName,
+            probability: probability,
+            status: status
+          }
+        }
+        return null
+      }).filter((crop): crop is { name: string; probability: number; status: string } => crop !== null)
+      
+      // Sort by probability (highest first)
+      crops.sort((a, b) => b.probability - a.probability)
+      
+      return crops
+    }
+    
+    return null
+  }
+  
+  // Process the Yield Analysis section
+  const yieldSection = yieldAnalysisMatch[1]
+  const cropMatches = yieldSection.match(/• ✅ ([^:]+): (\d+)% \(([^)]+)\)/g)
+  
+  if (!cropMatches || cropMatches.length === 0) {
+    return null
+  }
+  
+  const crops = cropMatches.map(match => {
+    const cropMatch = match.match(/• ✅ ([^:]+): (\d+)% \(([^)]+)\)/)
+    if (cropMatch) {
+      return {
+        name: cropMatch[1].trim(),
+        probability: parseInt(cropMatch[2]),
+        status: cropMatch[3].trim()
+      }
+    }
+    return null
+  }).filter((crop): crop is { name: string; probability: number; status: string } => crop !== null)
+  
+  // Sort by probability (highest first)
+  crops.sort((a, b) => b.probability - a.probability)
+  
+  return crops
+}
 
 function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile: any }) {
   const [selectedLocation, setSelectedLocation] = useState("")
@@ -751,6 +1263,50 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                           <ReactMarkdown>{cropRecommendations}</ReactMarkdown>
                         </div>
                       </div>
+                      
+                      {/* Crop Yield Probability Chart */}
+                      {(() => {
+                        const yieldCrops = extractYieldData(cropRecommendations);
+                        console.log('AI Response:', cropRecommendations);
+                        console.log('Extracted Yield Data:', yieldCrops);
+                        
+                        if (yieldCrops && yieldCrops.length > 0) {
+                          return (
+                            <div className="p-4 bg-white rounded border shadow-sm animate-fade-in-up">
+                              <h5 className="font-semibold text-black-700 mb-3 text-left">Crop Yield Probability Analysis</h5>
+                              <CropChart crops={yieldCrops} />
+                              
+                              {/* Best Crop Summary */}
+                              <div className="mt-4 pt-4 border-t border-gray-100">
+                                <div className="text-center">
+                                  <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-full">
+                                    <CheckCircle className="h-4 w-4" />
+                                    <span className="font-semibold text-sm">
+                                      Best Choice: {yieldCrops[0].name} ({yieldCrops[0].probability}% yield probability)
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        } else {
+                          return (
+                            <div className="p-4 bg-muted/30 rounded border text-center">
+                              <BarChart3 className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                              <p className="text-sm text-muted-foreground">
+                                Yield probability chart unavailable - yield data could not be extracted from AI response
+                              </p>
+                              <details className="mt-2 text-xs text-muted-foreground">
+                                <summary className="cursor-pointer">Debug Info</summary>
+                                <pre className="mt-2 text-left bg-gray-100 p-2 rounded text-xs overflow-auto max-h-32">
+                                  {cropRecommendations.substring(0, 500)}...
+                                </pre>
+                              </details>
+                            </div>
+                          );
+                        }
+                      })()}
+                      
                       <Button 
                         variant="outline" 
                         onClick={() => setCropRecommendations("")}
@@ -760,10 +1316,10 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                       </Button>
                     </div>
                   ) : (
-                    <div className="text-center py-12">
-                      <Brain className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-muted-foreground mb-2">No recommendations yet</p>
-                      <p className="text-sm text-muted-foreground">
+                    <div className="flex flex-col items-center justify-center h-128 py-12">
+                      <Brain className="h-24 w-24 text-muted-foreground mx-auto mb-6" />
+                      <p className="text-muted-foreground mb-4 text-2xl font-semibold">No recommendations yet</p>
+                      <p className="text-lg text-muted-foreground">
                         Fill in the form and click "Get AI Recommendations" to get started
                       </p>
                     </div>
@@ -913,6 +1469,58 @@ function AuthProtectedDashboard({ user, userProfile }: { user: any; userProfile:
                           <ReactMarkdown>{pricePredictions}</ReactMarkdown>
                         </div>
                       </div>
+                      
+                      {/* Price Chart */}
+                      {(() => {
+                        const { currentPrice, predictedPrice } = extractPriceData(pricePredictions)
+                        if (currentPrice > 0 && predictedPrice > 0) {
+                          return (
+                            <div className="p-4 bg-white rounded border shadow-sm animate-fade-in-up">
+                              <h5 className="font-semibold text-black-700 mb-3 text-left">Price Comparison Chart</h5>
+                              <PriceChart 
+                                currentPrice={currentPrice} 
+                                predictedPrice={predictedPrice} 
+                                crop={selectedCrop} 
+                                district={selectedLocation} 
+                              />
+                              
+                              {/* Price Summary */}
+                              <div className="mt-4 pt-4 border-t border-gray-100">
+                                <div className="grid grid-cols-2 gap-4 text-center">
+                                  <div>
+                                    <p className="text-sm text-gray-500">Price Difference</p>
+                                    <p className={`text-lg font-bold ${
+                                      predictedPrice > currentPrice ? 'text-green-600' : 'text-red-600'
+                                    }`}>
+                                      ₹{(predictedPrice - currentPrice).toLocaleString()}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-sm text-gray-500">Change %</p>
+                                    <p className={`text-lg font-bold ${
+                                      predictedPrice > currentPrice ? 'text-green-600' : 'text-red-600'
+                                    }`}>
+                                      {((predictedPrice - currentPrice) / currentPrice * 100).toFixed(1)}%
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        } else {
+                          return (
+                            <div className="p-4 bg-muted/30 rounded border text-center">
+                              <BarChart3 className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                              <p className="text-sm text-muted-foreground">
+                                Chart unavailable - price data could not be extracted from AI response
+                              </p>
+                            </div>
+                          )
+                        }
+                      })()}
+                      
+
+                      
                       <Button 
                         variant="outline" 
                         onClick={() => setPricePredictions("")}
