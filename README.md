@@ -2,7 +2,7 @@
 
 [![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://krishi-mitra-2.vercel.app/)
 
-[![Live Project](https://img.shields.io/badge/Live%20Project-dc--pearl.vercel.app-green?style=for-the-badge&logo=vercel)](https://krishi-mitra-2.vercel.app/)
+[![Live Project](https://img.shields.io/badge/Live%20Project-krishi--mitra--2.vercel.app-green?style=for-the-badge&logo=vercel)](https://krishi-mitra-2.vercel.app/)
 
 ## 🖼️ Prototype Screenshots
 
