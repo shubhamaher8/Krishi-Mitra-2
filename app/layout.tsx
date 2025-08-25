@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "KrishiMitra 2.0 - AI-Powered Agriculture Solutions",
   description: "Advanced AI tools for crop recommendations, price predictions, and disease detection",
   icons: {
-    icon: "/favicon.ico",
+    icon: "/favicon.png",
   },
 }
 
