@@ -338,11 +338,11 @@ function CropChart({ crops }: {
           } else if (crop.status.includes('Good')) {
             return 'rgba(59, 130, 246, 1)'  // Blue for good match
           } else {
-            return 'rgba(202, 138, 4, 1)'  // Gray for moderate match
+            return 'rgba(167, 228, 12, 1)'  // Gray for moderate match
           }
         }),
         borderWidth: 3,
-        borderRadius: 12,
+        borderRadius: 8,
         borderSkipped: false,
         barPercentage: 0.5, // Make bars thinner
         categoryPercentage: 0.7, // Space between bars
@@ -361,7 +361,7 @@ function CropChart({ crops }: {
           } else if (crop.status.includes('Good')) {
             return 'rgba(59, 130, 246, 1)'  // Blue hover border
           } else {
-            return 'rgba(202, 138, 4, 1)'  // Gray hover border
+            return 'rgba(205, 208, 7, 1)'  // Gray hover border
           }
         }),
         hoverBorderWidth: 4,

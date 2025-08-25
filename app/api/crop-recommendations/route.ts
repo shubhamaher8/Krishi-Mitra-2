@@ -38,7 +38,7 @@ Response Instructions:
      **🌾 Crop 1: Rice**  
    - Add a **medium size bold "Reason" line**, e.g.:  
      **💡 Reason** 
-   - List 3 ✅ bullet points for reasons. **Do not bold or italicize the bullets**.  
+   - List 3  bullet points for reasons. **Do not bold or italicize the bullets**.  
    - Add Yield Probability: X% (where X is a realistic percentage based on conditions)
 4. Leave **one empty line** between each crop for visual separation.  
 5. Only recommend **regular Indian crops** that are widely cultivated.  
