@@ -9,12 +9,12 @@
 <table>
   <tr>
     <td align="center">
-      <img src="public/homepage.png" alt="Homepage Screenshot" width="420"/>
+      <img src="public/Homepage.png" alt="Homepage Screenshot" width="420"/>
       <br/>
       <b>Homepage View</b>
     </td>
     <td align="center">
-      <img src="public/dashboard.png" alt="Dashboard Screenshot" width="420"/>
+      <img src="public/Dashboard.png" alt="Dashboard Screenshot" width="420"/>
       <br/>
       <b>Dashboard View</b>
     </td>
