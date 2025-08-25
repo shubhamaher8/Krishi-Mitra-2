@@ -128,28 +128,6 @@ We welcome contributions to KrishiMitra 2.0! Please follow these steps to contri
 6. Push to the branch: `git push origin feature/your-feature-name`
 7. Submit a pull request
 
-### Code Style
 
-- Follow the existing code style and patterns
-- Use TypeScript for type safety
-- Write meaningful commit messages
-- Document new features or API changes
 
-## License Information
 
-KrishiMitra 2.0 is licensed under the MIT License. See the LICENSE file for more details.
-
-## Contact/Support Details
-
-- **Email**: yodha925@gmail.com
-- **Website**: [KrishiMitra 2.0](https://krishimitra.vercel.app)
-- **Location**: Pune, Maharashtra, India
-
-### Development Team
-
-- Shubham Aher - CEO & Founder (Web Development)
-- Dhananjay Chitale - CTO & Co-founder (Head of Technology)
-- Shravan Dhage - CFO & Co-founder (Research Analyst)
-- Shreenand Bandre - CXO & Co-founder (AI and Machine Learning)
-
-For bug reports or feature requests, please open an issue on our GitHub repository or contact us via email.
