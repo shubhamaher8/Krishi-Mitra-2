@@ -1,8 +1,25 @@
 # KrishiMitra 2.0
 
-![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://dc-pearl.vercel.app/)
 
 [![Live Project](https://img.shields.io/badge/Live%20Project-dc--pearl.vercel.app-green?style=for-the-badge&logo=vercel)](https://dc-pearl.vercel.app/)
+
+## 🖼️ Prototype Screenshots
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="public/homepage.png" alt="Homepage Screenshot" width="420"/>
+      <br/>
+      <b>Homepage View</b>
+    </td>
+    <td align="center">
+      <img src="public/dashboard.png" alt="Dashboard Screenshot" width="420"/>
+      <br/>
+      <b>Dashboard View</b>
+    </td>
+  </tr>
+</table>
 
 ## Description
 
