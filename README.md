@@ -4,7 +4,7 @@
 
 [![Live Project](https://img.shields.io/badge/Live%20Project-krishi--mitra--2.vercel.app-green?style=for-the-badge&logo=vercel)](https://krishi-mitra-2.vercel.app/)
 
-## 🖼️ Prototype Screenshots
+## Prototype Screenshots
 
 <table>
   <tr>
@@ -47,8 +47,8 @@ Our mission is to bridge the gap between traditional farming wisdom and cutting-
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/krishimitra-2.0.git
-   cd krishimitra-2.0
+   git clone https://github.com/shubhamaher8/Krishi-Mitra-2.git
+   cd Krishi-Mitra-2
    ```
 
 2. Install dependencies:
@@ -138,13 +138,8 @@ The application uses Tailwind CSS for styling. You can customize the appearance 
 We welcome contributions to KrishiMitra 2.0! Please follow these steps to contribute:
 
 1. Fork the repository
-2. Create a new branch: `git checkout -b feature/your-feature-name`
+2. Create a new branch: `git checkout -b feature`
 3. Make your changes
-4. Run tests and ensure code quality: `npm run lint`
-5. Commit your changes: `git commit -m 'Add some feature'`
-6. Push to the branch: `git push origin feature/your-feature-name`
-7. Submit a pull request
-
-
-
-
+4. Commit your changes: `git commit -m 'Add some feature'`
+5. Push to the branch: `git push origin feature`
+6. Submit a pull request
