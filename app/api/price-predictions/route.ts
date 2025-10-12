@@ -39,9 +39,9 @@ Example format:
 **📊 Predicted Price**: ₹4500 per Quintal (over the next 2 months)
 **✅ Market Confidence**: 85%
 **🔑 Key Factors**:
-• 🌧️ Monsoon rains affecting supply in nearby growing regions
+• 🌾 Damaged crops due to climate change creating short supply
 • 🛒 Demand from local markets and hotels
-• 🚚 Transport and logistics costs
+• 🏛️ Government support for price increase with msp
 • 📊 Prevailing wholesale market prices
 
 Keep the response easy to read, suitable for immediate farming decisions. Format everything in Markdown. Ensure prices are exact numbers for accurate chart generation.`
