@@ -16,8 +16,9 @@ export const metadata: Metadata = {
   description: "Advanced AI tools for crop recommendations, price predictions, and disease detection",
   manifest: "/manifest.json",
   icons: {
-    icon: "/favicon.png",
+    icon: "/icons/icon-192x192.svg",
     apple: "/icons/apple-touch-icon-180x180.svg",
+    shortcut: "/icons/icon-192x192.svg",
   },
   appleWebApp: {
     capable: true,
@@ -81,8 +82,9 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180x180.svg" />
         
         {/* PWA Icons */}
-        <link rel="icon" type="image/svg+xml" sizes="32x32" href="/icons/icon-144x144.svg" />
+        <link rel="icon" type="image/svg+xml" sizes="32x32" href="/icons/icon-192x192.svg" />
         <link rel="icon" type="image/svg+xml" sizes="16x16" href="/icons/icon-144x144.svg" />
+        <link rel="icon" type="image/svg+xml" href="/icons/icon-192x192.svg" />
         <link rel="mask-icon" href="/icons/maskable-icon-512x512.svg" color="#22c55e" />
         
         {/* Splash Screen for iOS */}
