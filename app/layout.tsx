@@ -28,7 +28,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} antialiased`}>
-      <body>{children}</body>
+      <body>
+        {/* Elfsight Website Translator | KrishiMitra */}
+        <script src="https://elfsightcdn.com/platform.js" async></script>
+        <div className="elfsight-app-f3d330dc-9294-4906-be07-8bd61ed27e36" data-elfsight-app-lazy></div>
+        {children}
+      </body>
     </html>
   )
 }
