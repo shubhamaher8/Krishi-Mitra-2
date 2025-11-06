@@ -54,7 +54,7 @@ Keep the response easy to read, suitable for immediate farming decisions. Format
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'provider-3/gpt-4.1-nano',
+        model: 'provider-5/gpt-4.1-nano',
         messages: [
           {
             role: 'user',

@@ -83,7 +83,7 @@ Example Output:
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "provider-3/gpt-4o-mini",
+        model: "provider-5/gpt-4o-mini",
         messages: [
           {
             role: 'user',
