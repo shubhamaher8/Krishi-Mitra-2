@@ -53,7 +53,7 @@ Keep the response concise, suitable for immediate farming decisions. Format ever
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "provider-5/gpt-5-nano",
+        model: "provider-5/gpt-4.1-nano",
         messages: [
           {
             role: 'user',
