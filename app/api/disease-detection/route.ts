@@ -44,49 +44,39 @@ Format your response in clear, simple text that a farmer can easily understand. 
 
 Keep the response concise, suitable for immediate farming decisions. Format everything in Markdown.`
 
-    const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const cohereResponse = await fetch('https://api.cohere.com/v2/chat', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${process.env.COHERE_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://krishi-mitra-2.vercel.app',
-        'X-Title': 'KrishiMitra 2.0',
       },
       body: JSON.stringify({
-        model: "google/gemma-4-31b-it:free",
+        model: "command-a-vision-07-2025",
         messages: [
           {
-            role: 'user',
+            role: "user",
             content: [
-              {
-                type: 'text',
-                text: prompt
-              },
-              {
-                type: 'image_url',
-                image_url: {
-                  url: imageData
-                }
-              }
-            ]
+              { type: "text", text: prompt },
+              { type: "image_url", image_url: { url: imageData } },
+            ],
           }
         ],
-        max_tokens: 9000,
-        temperature: 0.5
+        max_tokens: 8000,
+        temperature: 0.5,
       })
     })
 
-    if (!openRouterResponse.ok) {
-      const errorData = await openRouterResponse.text()
-      console.error('OpenRouter API error:', errorData)
+    if (!cohereResponse.ok) {
+      const errorData = await cohereResponse.text()
+      console.error('Cohere API error:', errorData)
       return NextResponse.json(
         { success: false, error: "Failed to analyze image" },
         { status: 500 }
       )
     }
 
-    const aiResponse = await openRouterResponse.json()
-    const diseaseAnalysis = aiResponse.choices?.[0]?.message?.content || "No analysis available"
+    const data = await cohereResponse.json()
+    const diseaseAnalysis = data.message?.content?.[0]?.text || "No analysis available"
 
     return NextResponse.json({
       success: true,
