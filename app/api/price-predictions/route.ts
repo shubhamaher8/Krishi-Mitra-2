@@ -46,15 +46,16 @@ Example format:
 
 Keep the response easy to read, suitable for immediate farming decisions. Format everything in Markdown. Ensure prices are exact numbers for accurate chart generation.`
 
-    // Call OpenRouter API with Mistral AI
-    const openRouterResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {
+    const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.A4F_API_KEY}`,
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://krishi-mitra-2.vercel.app',
+        'X-Title': 'KrishiMitra 2.0',
       },
       body: JSON.stringify({
-        model: 'provider-5/gpt-4.1-nano',
+        model: 'google/gemma-4-31b-it:free',
         messages: [
           {
             role: 'user',

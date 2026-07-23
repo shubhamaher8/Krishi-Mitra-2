@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Prepare prompt for A4F API
     const prompt = `You are an expert agricultural scientist specializing in crop disease detection. Analyze this crop image and provide a quick assessment in **Markdown format**.
 
 start each point on new line 
@@ -45,15 +44,16 @@ Format your response in clear, simple text that a farmer can easily understand. 
 
 Keep the response concise, suitable for immediate farming decisions. Format everything in Markdown.`
 
-    // Call A4F API with GPT-5 Nano
-    const a4fResponse = await fetch(process.env.A4F_BASE_URL + '/chat/completions', {
+    const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.A4F_API_KEY}`,
+        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
         'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://krishi-mitra-2.vercel.app',
+        'X-Title': 'KrishiMitra 2.0',
       },
       body: JSON.stringify({
-        model: "provider-5/gpt-4.1-nano",
+        model: "google/gemma-4-31b-it:free",
         messages: [
           {
             role: 'user',
@@ -76,16 +76,16 @@ Keep the response concise, suitable for immediate farming decisions. Format ever
       })
     })
 
-    if (!a4fResponse.ok) {
-      const errorData = await a4fResponse.text()
-      console.error('A4F API error:', errorData)
+    if (!openRouterResponse.ok) {
+      const errorData = await openRouterResponse.text()
+      console.error('OpenRouter API error:', errorData)
       return NextResponse.json(
         { success: false, error: "Failed to analyze image" },
         { status: 500 }
       )
     }
 
-    const aiResponse = await a4fResponse.json()
+    const aiResponse = await openRouterResponse.json()
     const diseaseAnalysis = aiResponse.choices?.[0]?.message?.content || "No analysis available"
 
     return NextResponse.json({
