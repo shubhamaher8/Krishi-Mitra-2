@@ -68,8 +68,8 @@ Our mission is to bridge the gap between traditional farming wisdom and cutting-
    WEATHER_API_KEY=your_weather_api_key
    WEATHER_API_HOST=your_weather_api_host
    
-# OpenRouter AI
-OPENROUTER_API_KEY=your_openrouter_api_key
+# Cohere AI
+COHERE_API_KEY=your_cohere_api_key
    ```
 
 4. Run the development server:
