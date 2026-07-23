@@ -12,7 +12,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Prepare prompt for Mistral AI
     const prompt = `You are an expert agricultural economist specializing in Indian crop markets. Based on the following information, provide a price prediction analysis in **Markdown format**:
 
 Crop: ${crop}
@@ -46,38 +45,33 @@ Example format:
 
 Keep the response easy to read, suitable for immediate farming decisions. Format everything in Markdown. Ensure prices are exact numbers for accurate chart generation.`
 
-    const openRouterResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    const mistralResponse = await fetch('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
+        'Authorization': `Bearer ${process.env.MISTRAL_API_KEY}`,
         'Content-Type': 'application/json',
-        'HTTP-Referer': 'https://krishi-mitra-2.vercel.app',
-        'X-Title': 'KrishiMitra 2.0',
       },
       body: JSON.stringify({
-        model: 'google/gemma-4-31b-it:free',
+        model: "mistral-medium-3-5",
         messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
+          { role: "user", content: prompt }
         ],
         max_tokens: 7200,
-        temperature: 0.3
+        temperature: 0.3,
       })
     })
 
-    if (!openRouterResponse.ok) {
-      const errorData = await openRouterResponse.text()
-      console.error('OpenRouter API error:', errorData)
+    if (!mistralResponse.ok) {
+      const errorData = await mistralResponse.text()
+      console.error('Mistral API error:', errorData)
       return NextResponse.json(
         { success: false, error: "Failed to get price predictions" },
         { status: 500 }
       )
     }
 
-    const aiResponse = await openRouterResponse.json()
-    const pricePredictions = aiResponse.choices?.[0]?.message?.content || "No predictions available"
+    const data = await mistralResponse.json()
+    const pricePredictions = data.choices?.[0]?.message?.content || "No predictions available"
 
     return NextResponse.json({
       success: true,
