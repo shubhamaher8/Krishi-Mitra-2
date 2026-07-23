@@ -483,17 +483,17 @@ function extractPriceData(aiResponse: string) {
 
 // Function to extract yield data from crop recommendations AI response
 function extractYieldData(aiResponse: string) {
-  // Try to match the new format first (Yield Analysis section)
-  let yieldAnalysisMatch = aiResponse.match(/\*\*Yield Analysis\*\*([\s\S]*?)(?=\n\n|$)/)
+  // Try to match the Yield Analysis section (with or without ** markdown bold)
+  let yieldAnalysisMatch = aiResponse.match(/\**\s*Yield Analysis\s*\**([\s\S]*?)(?=\n\n|$)/)
   
   // If not found, try to extract from individual crop sections
   if (!yieldAnalysisMatch) {
-    // Look for yield probability in each crop section
-    const cropSections = aiResponse.match(/\*\*🌾 Crop \d+: ([^*]+)\*\*[\s\S]*?Yield Probability: (\d+)%/g)
+    // Look for yield probability in each crop section (with or without ** markdown bold)
+    const cropSections = aiResponse.match(/\**\s*🌾\s*Crop\s*\d+:\s*([^*]+)\**[\s\S]*?Yield Probability:\s*(\d+)%/g)
     
     if (cropSections && cropSections.length > 0) {
       const crops = cropSections.map(section => {
-        const cropMatch = section.match(/\*\*🌾 Crop \d+: ([^*]+)\*\*[\s\S]*?Yield Probability: (\d+)%/)
+        const cropMatch = section.match(/\**\s*🌾\s*Crop\s*\d+:\s*([^*]+)\**[\s\S]*?Yield Probability:\s*(\d+)%/)
         if (cropMatch) {
           const cropName = cropMatch[1].trim()
           const probability = parseInt(cropMatch[2])
@@ -526,14 +526,15 @@ function extractYieldData(aiResponse: string) {
   
   // Process the Yield Analysis section
   const yieldSection = yieldAnalysisMatch[1]
-  const cropMatches = yieldSection.match(/• ✅ ([^:]+): (\d+)% \(([^)]+)\)/g)
+  // Match both with and without ✅ emoji, and also • (bullet) only
+  const cropMatches = yieldSection.match(/•\s*(?:✅\s*)?([^:]+):\s*(\d+)%\s*\(([^)]+)\)/g)
   
   if (!cropMatches || cropMatches.length === 0) {
     return null
   }
   
   const crops = cropMatches.map(match => {
-    const cropMatch = match.match(/• ✅ ([^:]+): (\d+)% \(([^)]+)\)/)
+    const cropMatch = match.match(/•\s*(?:✅\s*)?([^:]+):\s*(\d+)%\s*\(([^)]+)\)/)
     if (cropMatch) {
       return {
         name: cropMatch[1].trim(),
